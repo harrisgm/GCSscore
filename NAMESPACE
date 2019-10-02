@@ -13,6 +13,15 @@ importFrom(dplR, tbrm)
 
 
 export(
-# Export main function:
-GCSscore
+  ## Export main function:
+  
+  GCSscore,
+
+  ## Export probeFile package builder functions
+  ## from R/getGCSscoreProbeData.R:
+  
+  get3primeIVTprobefileData,
+  getWTgeneexonprobefileData,
+  getClariomSprobefileData,
+  getXTAprobefileData
 )

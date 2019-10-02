@@ -176,7 +176,7 @@ signif[,p.values.1 := (1 - pnorm(abs(signif[,Sscore])))]
 signif[,p.values.2 := 2*(1 - pnorm(abs(signif[,Sscore])))]
 
 # sort the probe_ids by the absolute value of the Sscore:
-signif <- signif[order(abs(Sscore),decreasing = T)]
+signif <- signif[order(abs(Sscore),decreasing = TRUE)]
 @
 
 <<>>= 

@@ -477,7 +477,7 @@ getXTAprobefileData <- function(arraytype, datafile,
 #   if (missing(species) || !is.character(species))
 #     stop(paste("'species' is missing or invalid. Please specify the species that the",
 #                "package will pertain to using the form: Genus_species (e.g., Homo_sapiens).", sep = "\n"))
-#   
+# 
 #   ## Call the import function
 #   ## importRes is a list with three elements:
 #   ## $pkgname : package name
@@ -485,29 +485,29 @@ getXTAprobefileData <- function(arraytype, datafile,
 #   ## $symVal  : named list with symbol-value substitutions
 #   if (!quiet) cat("Importing the data.\n")
 #   importRes <- do.call(importfun, c(arraytype = arraytype, pkgname = pkgname, list(...)))
-#   
+# 
 #   pkgname <- importRes$pkgname
 #   thispkg <- "AnnotationForge"
 #   desc    <- packageDescription(thispkg)
-#   
+# 
 #   stopifnot(desc$Package ==thispkg)
 #   thispkgVers <- desc$Version
-#   
+# 
 #   symbolValues <- c(importRes$symVal,
 #                     list(
 #                       VERSION            = version,
 #                       CREATOR            = paste("package", thispkg, "version", thispkgVers),
-#                       ANNOTATIONDBIVERSION = thispkgVers,                                      
+#                       ANNOTATIONDBIVERSION = thispkgVers,
 #                       MAINTAINER         = maintainer,
 #                       SPECIES            = species))
-#   
+# 
 #   ## Create package
 #   createRes <- createPackage(pkgname,
 #                              destinationDir = outdir,
 #                              originDir = system.file("ProbePkg-template", package=thispkg),
 #                              symbolValues = symbolValues,
 #                              unlink = unlink, quiet = quiet)
-#   
+# 
 #   ## Write the data objects
 #   if (!quiet) cat("Writing the data.\n")
 #   save(list  = ls(importRes$dataEnv),
@@ -515,7 +515,7 @@ getXTAprobefileData <- function(arraytype, datafile,
 #        envir = importRes$dataEnv,
 #        # compress = TRUE
 #        compress = "xz")
-#   
+# 
 #   R_exe <- file.path(R.home(), "bin", "R")
 #   ## R CMD check
 #   cdir <- getwd()
@@ -541,7 +541,7 @@ getXTAprobefileData <- function(arraytype, datafile,
 #     if (unlink)
 #       unlink(paste(pkgname, ".Rcheck", sep=""), recursive = TRUE)
 #   }
-#   
+# 
 #   ## R CMD build
 #   if (build) {
 #     if (!quiet)
