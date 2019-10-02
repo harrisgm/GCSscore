@@ -1,6 +1,6 @@
 computeSscore <- function(cel1, cel2, probeFile, bgp, method, infoKey, SF1 = NULL, SF2 = NULL, verbose = FALSE, trim = NULL) {
-	# Insert fake-NULL fix to prevent 'no visible binding for global variable' in R CMD check:
-  GC.count <- Intensities <- fid <- rawS <- '.' <- NULL
+# 	# Insert fake-NULL fix to prevent 'no visible binding for global variable' in R CMD check:
+#   GC.count <- Intensities <- fid <- rawS <- '.' <- NULL
   
   #CREATE DATA TABLES FROM CEL FILES
 	celdat1 <- data.table(X = cel1$x, Y = cel1$y, Intensities = cel1$intensities, STDVS = cel1$stdvs, nPixels = cel1$pixels)

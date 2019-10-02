@@ -1,0 +1,19 @@
+CHANGES IN VERSION 1.0.0
+------------------------
+
+    o All GCSscore probe packages are now automatically 
+      generated from Bioconductor sources (platform design (pd) and
+      annotation (.db) packages) by using the makeProbePackage() function 
+      from the 'AnnotationForge' package.  These are generated and 
+      installed based on the chip-type being analyzed by the end user 
+      on an as-needed basis. 
+
+NEW FEATURES
+    o Initial release of R package.
+
+    o All GCSscore probe packages are now automatically 
+      generated from Bioconductor sources (platform design (pd) and
+      annotation (.db) packages) by using the makeProbePackage() function 
+      from the 'AnnotationForge' package.  These are generated and 
+      installed based on the chip-type being analyzed by the end user 
+      on an as-needed basis. 

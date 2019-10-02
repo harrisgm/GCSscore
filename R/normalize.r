@@ -1,5 +1,5 @@
 normalize <- function (Score) {
-	#x <- unique(Score)
+
 	x <- Score
 	Sx <- sum(x)
 	Sxx <- sum(x*x)

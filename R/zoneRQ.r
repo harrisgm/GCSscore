@@ -1,6 +1,6 @@
 zoneRQ <- function(DT, affyCel, trim) {
-  # Insert fake-NULL fix to prevent 'no visible binding for global variable' in R CMD check:
-  xZone <- X <- yZone <- Y <- Intensities <- '.' <- STDVS <- nPixels <- NULL
+  # # Insert fake-NULL fix to prevent 'no visible binding for global variable' in R CMD check:
+  # xZone <- X <- yZone <- Y <- Intensities <- '.' <- STDVS <- nPixels <- NULL
   
 	rows <- affyCel$header$rows; cols <- affyCel$header$cols
 	DT[,xZone := cut(X, seq(0, cols, by = cols/4), dig.lab = 10, include.lowest = TRUE)]

@@ -1,6 +1,6 @@
 GCSscore <- function(celFile1 = NULL, celFile2 = NULL, celTable = NULL, celTab.names = FALSE, typeFilter = 1, method = 1, rm.outmask = FALSE, SF1 = NULL, SF2 = NULL, fileout = FALSE, gzip = FALSE, verbose = FALSE) {
-  # Insert fake-NULL fix to prevent 'no visible binding for global variable' in R CMD check:
-  fs1_man_fsetid <- transcript_cluster_id <- probeset_id <- transcriptClusterID <- category <- probesetType <- transcriptID <- '.' <- geneName <- probe_type <- probesetID <- NULL
+  # # Insert fake-NULL fix to prevent 'no visible binding for global variable' in R CMD check:
+  # fs1_man_fsetid <- transcript_cluster_id <- probeset_id <- transcriptClusterID <- category <- probesetType <- transcriptID <- '.' <- geneName <- probe_type <- probesetID <- NULL
   # Basic testing that all entered parameters are set to usable values:
   if (!(typeFilter == 0 | typeFilter == 1))stop("typeFilter must be (0) or (1). (1) is the recommended setting")
   if (!(method == 1 | method == 2))stop("method must be (1) or (2)")
@@ -468,7 +468,7 @@ GCSscore <- function(celFile1 = NULL, celFile2 = NULL, celTable = NULL, celTab.n
         message("reading .CEL files")
         cel1 <- readCel(celTable[[2]][i], readIntensities = TRUE, readStdvs = TRUE, readPixels = TRUE, readXY = TRUE,readOutliers = FALSE, readMasked = FALSE)
         cel2 <- readCel(celTable[[3]][i], readIntensities = TRUE, readStdvs = TRUE, readPixels = TRUE, readXY = TRUE,readOutliers = FALSE, readMasked = FALSE)
-        if (rm.outmask==TRUE){
+        if (rm.outmask== TRUE){
           # Create list of all 'fid' probe indices which have been flagged in either celFile1, celFile2, or both:
           probes.rm <- rbind(as.data.table(cel1[["masked"]]),
                              as.data.table(cel1[["outliers"]]),
@@ -495,7 +495,7 @@ GCSscore <- function(celFile1 = NULL, celFile2 = NULL, celTable = NULL, celTab.n
             bgp.temp <- bgp[!(fid %in% probes.rm$probes.rm)]
           }
         }
-        if (rm.outmask==F){
+        if (rm.outmask == FALSE){
           # Don't filter out any of the outlier/masked probes before analysis:
           probeFile.temp <- probeFile
           bgp.temp <- bgp
@@ -556,7 +556,7 @@ GCSscore <- function(celFile1 = NULL, celFile2 = NULL, celTable = NULL, celTab.n
           bgp.temp <- bgp[!(fid %in% probes.rm$probes.rm)]
         }
       }
-      if (rm.outmask==F){
+      if (rm.outmask == FALSE){
         # Don't filter out any of the outlier/masked probes before analysis:
         probeFile.temp <- probeFile
         bgp.temp <- bgp
