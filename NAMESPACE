@@ -1,0 +1,17 @@
+import(methods)
+import(utils)
+import(Biobase)
+import(RSQLite)
+import(data.table)
+import(affxparser)
+import(stringr)
+importFrom(AnnotationForge, makeProbePackage)
+importFrom(stats, median)
+importFrom(graphics, hist)
+importFrom(dplR, tbrm)
+
+
+export(
+# Export main function:
+GCSscore
+)

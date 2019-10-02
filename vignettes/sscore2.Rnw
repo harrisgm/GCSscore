@@ -1,0 +1,167 @@
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+%\VignetteIndexEntry{SScore primer}
+%\VignetteKeywords{Analysis, Affymetrix}
+%\VignetteDepends{GCSscore}
+%\VignettePackage{GCSscore}
+\documentclass[12pt]{article}
+
+\usepackage{hyperref}
+\usepackage[authoryear,round]{natbib}
+
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+%\headheight=-.3in
+
+%\newcommand{\scscst}{\scriptscriptstyle}
+%\newcommand{\scst}{\scriptstyle}
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+
+\author{Guy M. Harris, Shahroze Abbas,\\ and Michael F. Miles}
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\title{Description of GCS-score: Expression Analysis of \\ WT-Type Affymetrix GeneChips \\ from Probe-Level Data}
+
+\maketitle
+\tableofcontents
+\newpage
+\section{Introduction}
+The S-Score algorithm, described by \cite{zhang2002}, \cite{kerns2003}, and \cite{kennedy2006b} is a novel comparative method for gene expression data analysis that performs tests of hypotheses directly from probe level data. It is based on an error model in which the detected signal is assumed to be proportional to the probe signal for highly expressed genes, but assumed to approach a background level (rather than 0) for genes with low levels of expression. This error model is used to calculate relative changes in probe intensities that converts probe signals into multiple measurements with equalized errors, which are summed over a probe set to form the significance score (S-score).  The original S-score method required the mismatch (MM) probes to estimate non-specific binding (NSB) for each perfect-match (PM) probes, and the MM probes were removed the arrays beginning with the Affymetrix Whole Transcriptome (WT) style arrays. This new algorithm uses a gc-content based NSB, thus eliminating the original algorithm's dependence on MM probes.  The GCS-score algorithm is capable of working on all modern Affymetrix array types (3' IVT and up). Assuming no expression differences between chips, the GCS-score output follows a standard normal distribution. Thus, a separate step estimating the probe set expression summary values is not needed and p-values can be easily calculated from the GCS-score output. Furthermore, in previous comparisons of dilution and spike-in microarray datasets, the original S-Score demonstrated greater sensitivity than many existing methods, without sacrificing specificity \citep{kennedy2006}. The \Rpackage{GCSscore} package \citep{harris2019} implements the GCS-score algorithm in the R programming environment, making it available to users of the Bioconductor \footnote{\url{http://www.bioconductor.org/}} project.
+
+\section{What's new in this version}
+This is the initial release.
+
+\section{Reading in data and generating S-Scores}
+Affymetrix data are generated from microarrays by analyzing the scanned 
+image of the chip (stored in a *.DAT file) to produce a *.CEL file. The 
+*.CEL file contains, among other information, a decimal number for each 
+probe on the chip that corresponds to its intensity. The GCS-score algorithm 
+compares two microarrays by combining all of the probe intensities from a 
+probesetID / transcriptionclusterID into a single summary statistic for each annotated gene or exon. 
+The \Rpackage{GCSscore} package processes the data obtained from .CEL files, which must be 
+loaded into R prior to calling the \Rfunction{GCSscore} function. Thus, the typical 
+sequence of steps to accomplish this is as follows:
+
+\begin{enumerate}
+\item Create a directory containing all *.CEL files relevant to the planned analysis.
+\item Load the library.
+<<results=hide>>=
+library(GCSscore)
+@
+\end{enumerate}
+
+The \Rfunction{GCSscore} function utilizes the \Rfunction{readCel} function to directly access the individual .CEL files. Additional information regarding the \Rfunction{readCel} function and detailed description of the structure of .CEL files can be found in the \Rpackage{affxparser} vignette. The \Rfunction{readCel} function allows the \Rpackage{GCSscore} package to access additional variables that are necessary for the noise and probe error estimations.  Almost all other reader packages only read the probe intensities values from the .CEL files
+
+The \Rfunction{GCSscore} function returns an object of class \Robject{data.table}. The class \Robject{data.table} is described in the \Rpackage{data.table} package, which is available on CRAN. The GCS-score values are returned in a \Robject{data.table} object, along with relevant annotation information.  The following examples illustrate the \Rpackage{GCSscore} package. These examples utilize the .CEL data files that are supplied with the \Rpackage{GCSscore} package.
+
+A basic GCS-score analysis is generated using the \Rfunction{GCSscore} function:
+
+<<results=hide>>= 
+# get the path to example CEL files in the package directory:
+celpath1 <- system.file("extdata/ex_dat/",
+                        "MN_2_3.CEL", package = "GCSscore")
+celpath2 <- system.file("extdata/ex_dat/",
+                        "MN_4_1.CEL", package = "GCSscore")
+# run GCSscore() function directly on two .CEL files:
+# Ss2_clarS <- GCSscore(celFile1 = celpath1, celFile2 = celpath2)
+GCSs_clarS <- GCSscore(celFile1 = celpath1, celFile2 = celpath2)
+@ 
+
+The return object 'GCSs_clarS' uses the Biobase data structure: ExpressionSet.  The GCS-score differential expression is contained in the \code{assayData}, 
+
+<<>>= 
+# display selected columns of GCSscore output:
+Ss2_clarS[1:6,c(1,3,6,7,8,11)]
+@
+
+Parameters for \Rfunction{GCSscore} function include:
+
+\begin{description}
+\item[celFile1] -- character string giving the .CEL file name the directory in which the *.CEL files are stored. If a directory is not specified, the current working directory is used.
+\item[celFile1] -- character string giving the directory in which the *.CEL files are stored.  If a directory is not specified, the current working directory is used.
+\item[celTable] -- A CSV file containing batch submission information. 
+\item[fileout] -- Determines if the resulting GCS-score coutput is written to disk 
+in a CSV format following the completion of the function. By default, this is set to FALSE so unnecessary GCS-score outputs are not saved to disk after each run.  Each output that is written to file includes a timestap for later reference.
+\item[celTab.names] -- If set to TRUE, then the GCS-score batch output is assigned the user-designated name, as specified in the first column of the batch input .CSV file. If set to FALSE, when the user submits a batch job, the column name of the run in the the batch output \Robject{data.table} will be: CELfilename1 vs CELfilename2.
+\item[SF] -- the Scaling Factor and Standard Difference Threshold. The Scale Factor is used to scale each intensity to a target background value, with the default of 500. The Standard Difference Threshold is used as an estimate of background noise, and is equal to the standard deviation for the lowest 2\% of intensities on a chip. These values are calculated internally by the \Rfunction{GCSscore} function.
+\item[verbose] -- a logical value indicating whether additional 
+information on the analyses is printed. This includes the and the SF and SDT values.
+\end{description}
+
+\section{Submitting a batch job}
+The \Rfunction{GCSscore} function is able to output mulitple GCS-score runs to a single file.  This is done by leaving \Robject{celFile1} and \Robject{celFile2} variables empty, and using the \Robject{celTable} argument instead.  The \Robject{celTable} argument accepts a three column \Robject{data.table} object, that is read into R from a .CSV file via the \Rfunction{fread} function from the \Rpackage{data.table} package.
+<<>>=
+# get the path to example CSV file in the package directory:
+celtab_path <- system.file("extdata/ex_dat/",
+                        "Ss2_BATCH_example.csv", package = "GCSscore")
+# read in the .CSV file with fread():
+celtab <- fread(celtab_path)
+# view structure of 'celTable' input:
+celtab
+@
+
+<<results=hide>>=
+# For the following example, the .CEL files are not in the working
+# directory.  The path to the .CEL files must be added to allow
+# the GCSscore() function to find them.
+
+# add path to celFile names in batch input:
+path <- system.file("extdata/ex_dat/", package = "GCSscore")
+celtab$CelFile1 <- celtab[,paste(path,CelFile1,sep="/")]
+celtab$CelFile2 <- celtab[,paste(path,CelFile2,sep="/")]
+@
+
+The \Rfunction{GCSscore} function will loop through all the runs listed in .CSV file before all GCS-score values are assigned to the end of the same annotation file (each GCS-score run is contained within one column). If the \Robject{celTab.names} is set to TRUE, the column names of each run will correspond to the run name assigned in the first column of the .CSV batch input file.  In this example, all four .CEL files included with the package are run in pairwise fashion.
+
+<<results=hide>>=
+# run GCSscore() function with batch input:
+Ss_clarS_batch <- GCSscore(celTable = celtab, celTab.names = TRUE)
+@
+
+The \Robject{ExpressionSet} returned from the \Rfunction{GCSscore} package can easily be converted back to a \Robject{data.table} structure.  This matches the structure of the .CSV file that is created if the \code{fileout} option is set to \code{TRUE}.  The conversion of the \Robject{ExpressionSet} object to \Robject{data.table} is as follows:
+
+<<>>=
+# converting GCS-score output from an 'ExpressionSet' to a 'data.table':
+Ss_clarS_batch_dt <- as.data.table(cbind(Ss_clarS_batch@featureData@data,Ss_clarS_batch@assayData[["exprs"]]))
+@
+
+\section{Using GCS-Scores in gene expression analysis}
+Under conditions of no differential expression, the GCS-Score output follows a standard normal (Gaussian) distribution with a mean of 0 and standard deviation of 1. This makes it straightforward to calculate p-values corresponding to rejection of the null hypothesis and acceptance of the alternative hypothesis of differential gene expression. Cutoff values for the GCS-scores can be set to achieve the desired level of significance. As an example, an absolute GCS-score value of 3 (signifying 3 standard deviations from the mean, a typical cutoff value) would correspond to a p-value of 0.003. Under this scenario, the significant genes can be found as:
+
+<<>>= 
+## find those greater than 3 SD
+signif <- Ss2_clarS[abs(Sscore) >= 3]
+@ 
+
+Similarly, the p-values can be calculated as:
+
+<<>>= 
+## find the corresponding one-sided p-values
+p.values.1 <- 1 - pnorm(abs(Ss2_clarS[,Sscore]))
+## find the corresponding two-sided p-values
+p.values.2 <- 2*(1 - pnorm(abs(Ss2_clarS[,Sscore]))) 
+@ 
+
+While the GCS-score algorithm does account for the correlations among probes within a two-chip comparison, it does not adjust p-values for multiple comparisons when comparing more than one pair of chips.
+
+The calculations for the SF and SDT are performed as originally described in the Affymetrix Statistical Algorithms Description Document \citep{affy:tech:2002} and implemented in Affymetrix software (using SDT = 4 * RawQ * SF).   The calculations for each *.CEL file are independent.
+
+
+\section{Version history}
+
+\begin{description}
+\item[1.1.0] first public release
+\item[1.0.0] initial development version
+\end{description}
+
+\section{Acknowledgements}
+The development of the original S-Score algorithm and its original implementation in C++ is the work of Dr. Li Zhang. The Delphi implementation of the S-Score algorithm is the work of Dr. Robnet Kerns.  The original S-score R package was work of Dr. Robert Kennedy.  This work was partly supported by F30 training grant (F30AA025535) to Guy M. Harris and NIAAA research grant AA13678 to Michael F. Miles.
+
+\bibliographystyle{plainnat}
+\bibliography{sscore}
+
+\end{document}

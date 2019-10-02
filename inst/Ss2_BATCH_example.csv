@@ -1,0 +1,7 @@
+run_name,CelFile1,CelFile2
+example01,MN_2_3.CEL,MN_4_1.CEL
+example02,MN_2_3.CEL,MN_4_2.CEL
+example03,MN_2_3.CEL,MN_4_3.CEL
+example04,MN_4_1.CEL,MN_4_2.CEL
+example05,MN_4_1.CEL,MN_4_3.CEL
+example06,MN_4_2.CEL,MN_4_3.CEL
