@@ -50,7 +50,12 @@ sequence of steps to accomplish this is as follows:
 \item Create a directory containing all *.CEL files relevant to the planned analysis.
 \item Load the library.
 <<results=hide>>=
-# library(GCSscore)
+# load GCSscore package:
+library(GCSscore)
+
+# load data.table package for parsing data files
+# outside of the GCSscore package:
+# library(data.table)
 @
 \end{enumerate}
 
@@ -62,100 +67,134 @@ A basic GCS-score analysis is generated using the \Rfunction{GCSscore} function:
 
 <<results=hide>>= 
 # get the path to example CEL files in the package directory:
-# celpath1 <- system.file("extdata/ex_dat/",
-                        # "MN_2_3.CEL", package = "GCSscore")
-# celpath2 <- system.file("extdata/ex_dat/",
-                        # "MN_4_1.CEL", package = "GCSscore")
-# run GCSscore() function directly on two .CEL files:
-# Ss2_clarS <- GCSscore(celFile1 = celpath1, celFile2 = celpath2)
-# GCSs_clarS <- GCSscore(celFile1 = celpath1, celFile2 = celpath2)
+celpath1 <- system.file("extdata/","MN_2_3.CEL", package = "GCSscore")
+celpath2 <- system.file("extdata/","MN_4_1.CEL", package = "GCSscore")
+# run GCSscore() function directly on the two .CEL files above:
+GCSs.single <- GCSscore(celFile1 = celpath1, celFile2 = celpath2)
 @ 
 
-The returned object object uses the Biobase data structure: ExpressionSet.  The GCS-score differential expression is contained in the assayData. 
+The returned object object uses the Biobase data structure: ExpressionSet.  The GCS-score differential expression is contained in the assayData.  For viewing and exporting, it is often desirable to convert the ExpressionSet back to a data.table/data.frame object: 
 
 <<>>= 
-# display selected columns of GCSscore output:
-# Ss2_clarS[1:6,c(1,3,6,7,8,11)]
+# view class of output:
+class(GCSs.single)[1]
+
+# convert GCSscore single-run from ExpressionSet to data.table:
+GCSs.single.dt <- 
+  data.table::as.data.table(cbind(GCSs.single@featureData@data,
+                                  GCSs.single@assayData[["exprs"]]))
+
+# preview the beginning and end of the output.
+# *remove 'gene_name' column for printing to PDF:
+head(GCSs.single.dt[,-c("gene_name","nProbes")])
 @
 
 Parameters for \Rfunction{GCSscore} function include:
 
 \begin{description}
 \item[celFile1] -- character string giving the .CEL file name the directory in which the *.CEL files are stored. If a directory is not specified, the current working directory is used.
-\item[celFile1] -- character string giving the directory in which the *.CEL files are stored.  If a directory is not specified, the current working directory is used.
 \item[celTable] -- A CSV file containing batch submission information. 
 \item[fileout] -- Determines if the resulting GCS-score coutput is written to disk 
 in a CSV format following the completion of the function. By default, this is set to FALSE so unnecessary GCS-score outputs are not saved to disk after each run.  Each output that is written to file includes a timestap for later reference.
 \item[celTab.names] -- If set to TRUE, then the GCS-score batch output is assigned the user-designated name, as specified in the first column of the batch input .CSV file. If set to FALSE, when the user submits a batch job, the column name of the run in the the batch output \Robject{data.table} will be: CELfilename1 vs CELfilename2.
-\item[SF] -- the Scaling Factor and Standard Difference Threshold. The Scale Factor is used to scale each intensity to a target background value, with the default of 500. The Standard Difference Threshold is used as an estimate of background noise, and is equal to the standard deviation for the lowest 2\% of intensities on a chip. These values are calculated internally by the \Rfunction{GCSscore} function.
-\item[verbose] -- a logical value indicating whether additional 
-information on the analyses is printed. This includes the and the SF and SDT values.
+\item[typeFilter] -- If set to 0, all available probe types are included in the calculation and normalization of the GCS-score values. If set to 1, only probes  well-annotated probeids (from BioConductor .db packages) are included in the calculation and normalization of the GCS-score output.
+\item[method] -- This determines the method used to group and tally the probeids when calculating GCS-scores.  For Whole Transcriptome (WT) arrays, for gene-level (transcriptclusterid-based) analysis, set method = 1. For exon-level (probesetid-based) analysis, set method = 2.  For the older generation arrays (3 IVT-style), if a GC-content based background correction is desired on the 3 IVT arrays, set method = 1, if a PM-MM based background correction is desired, set method = 2 (PM-MM gives identical results to the original S-score package).   
+\item[rm.outmask] -- If set to TRUE, then probes that are flagged as MASKED or OUTLIER in either celFile1 or celFile2 will be removed from the analysis.  If set to FALSE, these probes are not filtered out and will be used in the GCS-score calculation.
+\item[SF1 and SF2] -- the Scaling Factors (SF1 and SF2). The Scaling Factors are used to scale the median raw intensities of the probe grouping method on both chips to a target value, in this case that value is 500. The Standard Difference Threshold (SDTs) is used as an estimate of background noise on each chip, and is equal to the standard deviation for the lowest 2\% of probe intensities from 16 differnet zones on each chip. These values are calculated internally by the \Rfunction{GCSscore} function.
+\item[fileout] -- Determines if the resulting GCS-score output is written to disk in a .CSV format following the completion of the function. By default, this is set to FALSE so unnecessary GCS-score outputs are not saved to disk after each run.
+\item[verbose] -- a logical value indicating whether internally calculated values (SF, RawQ, SDT) are returned to the console during the analysis.
 \end{description}
 
 \section{Submitting a batch job}
 The \Rfunction{GCSscore} function is able to output mulitple GCS-score runs to a single file.  This is done by leaving \Robject{celFile1} and \Robject{celFile2} variables empty, and using the \Robject{celTable} argument instead.  The \Robject{celTable} argument accepts a three column \Robject{data.table} object, that is read into R from a .CSV file via the \Rfunction{fread} function from the \Rpackage{data.table} package.
 <<>>=
 # get the path to example CSV file in the package directory:
-# celtab_path <- system.file("extdata/ex_dat/",
-                        # "Ss2_BATCH_example.csv", package = "GCSscore")
+celtab_path <- system.file("extdata",
+                           "Ss2_BATCH_example.csv", 
+                           package = "GCSscore")
 # read in the .CSV file with fread():
-# celtab <- fread(celtab_path)
+celtab <- data.table::fread(celtab_path)
 # view structure of 'celTable' input:
-# celtab
+celtab
 @
 
 <<results=hide>>=
 # For the following example, the .CEL files are not in the working
 # directory.  The path to the .CEL files must be added to allow
-# the GCSscore() function to find them.
+# the GCSscore() function to find them:
 
-# add path to celFile names in batch input:
-# path <- system.file("extdata/ex_dat/", package = "GCSscore")
-# celtab$CelFile1 <- celtab[,paste(path,CelFile1,sep="/")]
-# celtab$CelFile2 <- celtab[,paste(path,CelFile2,sep="/")]
+# adds path to celFile names in batch input:
+#   NOTE: this is not necessary if the .CEL files 
+#         are in the working directory:
+path <- system.file("extdata", package = "GCSscore")
+celtab$CelFile1 <- celtab[,paste(path,CelFile1,sep="/")]
+celtab$CelFile2 <- celtab[,paste(path,CelFile2,sep="/")]
 @
 
 The \Rfunction{GCSscore} function will loop through all the runs listed in .CSV file before all GCS-score values are assigned to the end of the same annotation file (each GCS-score run is contained within one column). If the \Robject{celTab.names} is set to TRUE, the column names of each run will correspond to the run name assigned in the first column of the .CSV batch input file.  In this example, all four .CEL files included with the package are run in pairwise fashion.
 
 <<results=hide>>=
 # run GCSscore() function with batch input:
-# Ss_clarS_batch <- GCSscore(celTable = celtab, celTab.names = TRUE)
+GCSs.batch <- GCSscore(celTable = celtab, celTab.names = TRUE)
 @
 
 The \Robject{ExpressionSet} returned from the \Rfunction{GCSscore} package can easily be converted back to a \Robject{data.table} structure.  This matches the structure of the .CSV file that is created if the fileout option is set to TRUE.  The conversion of the \Robject{ExpressionSet} object to \Robject{data.table} is as follows:
 
 <<>>=
-# converting GCS-score output from an 'ExpressionSet' to a 'data.table':
-# Ss_clarS_batch_dt <- as.data.table(cbind(Ss_clarS_batch@featureData@data,Ss_clarS_batch@assayData[["exprs"]]))
+# view class of output:
+class(GCSs.batch)[1]
+
+# converting GCS-score output from'ExpressionSet' to 'data.table':
+GCSs.batch.dt <-
+  data.table::as.data.table(cbind(GCSs.batch@featureData@data,
+                                  GCSs.batch@assayData[["exprs"]]))
+
+# preview the beginning and output of the batch output:
+# *remove 'gene_name' and 'nProbes' columns for printing to PDF:
+head(GCSs.batch.dt[,-c("gene_name","nProbes")])
 @
 
 \section{Using GCS-Scores in gene expression analysis}
 Under conditions of no differential expression, the GCS-Score output follows a standard normal (Gaussian) distribution with a mean of 0 and standard deviation of 1. This makes it straightforward to calculate p-values corresponding to rejection of the null hypothesis and acceptance of the alternative hypothesis of differential gene expression. Cutoff values for the GCS-scores can be set to achieve the desired level of significance. As an example, an absolute GCS-score value of 3 (signifying 3 standard deviations from the mean, a typical cutoff value) would correspond to a p-value of 0.003. Under this scenario, the significant genes can be found as:
 
 <<>>= 
-## find those greater than 3 SD
-# signif <- Ss2_clarS[abs(Sscore) >= 3]
+## find scores greater than 3 SD:
+signif <- GCSs.single.dt[abs(Sscore) >= 3]
+
+# View the resulting table:
+# removing 'gene_name' and 'nProbes' columns for PDF printing:
+head(signif[,-c("gene_name","nProbes")])
 @ 
 
 Similarly, the p-values can be calculated as:
 
-<<>>= 
-## find the corresponding one-sided p-values
-# p.values.1 <- 1 - pnorm(abs(Ss2_clarS[,Sscore]))
+<<results=hide>>=
+# Calculate p-valus significant
+## find the corresponding one-sided p-values:
+signif[,p.values.1 := (1 - pnorm(abs(signif[,Sscore])))]
 ## find the corresponding two-sided p-values
-# p.values.2 <- 2*(1 - pnorm(abs(Ss2_clarS[,Sscore]))) 
+signif[,p.values.2 := 2*(1 - pnorm(abs(signif[,Sscore])))]
+
+# sort the probe_ids by the absolute value of the Sscore:
+signif <- signif[order(abs(Sscore),decreasing = T)]
+@
+
+<<>>= 
+# View the top of the most differentially expressed genes
+# from the GCSs.single output:
+
+# removing 'gene_name' and 'nProbes' columns for PDF printing:
+head(signif[,-c("gene_name","nProbes")])
 @ 
 
-While the GCS-score algorithm does account for the correlations among probes within a two-chip comparison, it does not adjust p-values for multiple comparisons when comparing more than one pair of chips.
-
-The calculations for the SF and SDT are performed as originally described in the Affymetrix Statistical Algorithms Description Document \citep{affy:tech:2002} and implemented in Affymetrix software (using SDT = 4 * RawQ * SF).   The calculations for each *.CEL file are independent.
+While the GCS-score algorithm does account for the correlations among probes within a two-chip comparison, it does not adjust p-values for multiple comparisons when comparing more than one pair of chips.  The calculations for the SF and SDT are performed as originally described in the Affymetrix Statistical Algorithms Description Document \citep{affy:tech:2002} and implemented in Affymetrix software (using SDT = 4 * RawQ * SF). The calculations for each of the *.CEL files are independent.
 
 
 \section{Version history}
 
 \begin{description}
-\item[1.1.0] first public release
-\item[1.0.0] initial development version
+\item[1.0.0] first public release
+\item[0.0.1] initial development version
 \end{description}
 
 \section{Acknowledgements}

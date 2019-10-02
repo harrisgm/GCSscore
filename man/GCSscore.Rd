@@ -17,7 +17,7 @@ gzip = FALSE, verbose = FALSE)
   \item{rm.outmask}{ If set to \code{TRUE}, then probes that are flagged as MASKED or OUTLIER in either CEL file 1 or CEL file 2 will be removed from the analysis.  If set to \code{FALSE}, these probes are not filtered out and will be used in the GCS-score calculation }
   \item{SF1}{ Input a pre-determined Scaling Factor (SF) for the 1st CEL file }
   \item{SF2}{ Input a pre-determined Scaling Factor (SF) for the 2nd CEL file }
-  \item{fileout}{ Determines if the resulting GCS-score coutput is written to disk in a CSV format following the completion of the
+  \item{fileout}{ Determines if the resulting GCS-score output is written to disk in a CSV format following the completion of the
   function. By default, this is set to FALSE so unnecessary GCS-score outputs are not saved to disk after each run }
   \item{gzip}{ If set to \code{TRUE}, the \code{GCSscore} output that is written to disk is compressed.  This could prove useful if a large number runs are input using the batch submission }
   \item{verbose}{If set to \code{TRUE}, more information will be printed to the console during while the algorithm is running }
