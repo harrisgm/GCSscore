@@ -14,4 +14,4 @@ biocViews: DifferentialExpression, Microarray, OneChannel,
         ProprietaryPlatforms, DataImport
 LazyData: FALSE
 NeedsCompilation: no
-Packaged: 2019-10-01 18:28:28 UTC; guyharris
+Packaged: 2019-10-02 18:28:28 UTC; guyharris
