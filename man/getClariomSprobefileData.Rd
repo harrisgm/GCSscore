@@ -42,7 +42,20 @@ getClariomSprobefileData(arraytype, datafile, pkgname = NULL, comparewithcdf = F
 
 \seealso{makeProbePackage}
 \examples{
-  ## Please refer to the vignette
+  if (length(list.files(path = ".", pattern = "*.CEL")) != 0){
+  ## Example using the "Clariom S mouse" chip-type
+  
+  ## Input the clean name for the given chip:
+  chip <- "clariomsmouse"
+
+  ## Input the .probe_tab file, as generated using the internal function:
+     ##  ClariomSpFBuilder()
+  
+  probedata <- "GCSs.clariomsmouse.probeFile.probe_tab"
+  
+  ## Run function:
+  getClariomSprobefileData(arraytype = chip, datafile = probedata)
+  }
 }
 \keyword{IO}
 \keyword{utilities}

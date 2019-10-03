@@ -42,7 +42,20 @@ get3primeIVTprobefileData(arraytype, datafile, pkgname = NULL, comparewithcdf = 
 
 \seealso{makeProbePackage}
 \examples{
-  ## Please refer to the vignette
+if (length(list.files(path = ".", pattern = "*.CEL")) != 0){
+  ## Example using the "Mouse430 2.0" chip-type
+  
+  ## Input the clean name for the given chip:
+  chip <- "mouse4302"
+
+  ## Input the .probe_tab file, as generated using the internal function:
+     ##  IVT3primepFBuilder()
+  
+  probedata <- "GCSs.mouse4302.probeFile.probe_tab"
+  
+  ## Run function:
+  get3primeIVTprobefileData(arraytype = chip, datafile = probedata)
+  }
 }
 \keyword{IO}
 \keyword{utilities}

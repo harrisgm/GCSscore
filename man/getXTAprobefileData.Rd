@@ -42,7 +42,20 @@ getXTAprobefileData(arraytype, datafile, pkgname = NULL, comparewithcdf = FALSE)
 
 \seealso{makeProbePackage}
 \examples{
-  ## Please refer to the vignette
+  if (length(list.files(path = ".", pattern = "*.CEL")) != 0){
+  ## Example using the "MTA_1-0" chip-type:
+  
+  ## Input the clean name for the given chip:
+  chip <- "mta10"
+
+  ## Input the .probe_tab file, as generated using the internal function:
+     ##  ClariomDXTApFBuilder()
+  
+  probedata <- "GCSs.mta10.probeFile.probe_tab"
+  
+  ## Run function:
+  getXTAprobefileData(arraytype = chip, datafile = probedata)
+  }
 }
 \keyword{IO}
 \keyword{utilities}

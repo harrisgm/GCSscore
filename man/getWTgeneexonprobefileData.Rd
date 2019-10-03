@@ -42,7 +42,20 @@ getWTgeneexonprobefileData(arraytype, datafile, pkgname = NULL, comparewithcdf =
 
 \seealso{makeProbePackage}
 \examples{
-  ## Please refer to the vignette
+  if (length(list.files(path = ".", pattern = "*.CEL")) != 0){
+  ## Example using the "Mouse Gene 1.0-ST v1" chip-type
+  
+  ## Input the clean name for the given chip:
+  chip <- "mogene10stv1"
+
+  ## Input the .probe_tab file, as generated using the internal function:
+     ##  WTgeneexonpFBuilder()
+  
+  probedata <- "GCSs.mogene10stv1.probeFile.probe_tab"
+  
+  ## Run function:
+  getWTgeneexonprobefileData(arraytype = chip, datafile = probedata)
+  }
 }
 \keyword{IO}
 \keyword{utilities}

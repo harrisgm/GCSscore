@@ -25,7 +25,7 @@ gzip = FALSE, verbose = FALSE)
 \details{
 The input accepts individual CEL files or reads in a CSV file for batch runs.  The user also inputs parameters to determine the \code{method} used by the GCS-score algorithm to group and tally the individual probes on a given array.
 }
-\value{A \code{data.table} object with GCS-score values for the probe groupings (determined by the \code{method} argument) and the relevant annotation informtaion }
+\value{An \code{ExpressionSet} object with GCS-score values for the probe groupings (determined by the \code{method} argument) and the relevant annotation informtaion }
 \examples{
 if (length(list.files(path = ".", pattern = "*.CEL")) != 0){
 
