@@ -1,12 +1,16 @@
-computeSscore <- function(cel1, cel2, probeFile, bgp, method, infoKey, SF1 = NULL, SF2 = NULL, verbose = FALSE, trim = NULL) {
-# 	# Insert fake-NULL fix to prevent 'no visible binding for global variable' in R CMD check:
-#   GC.count <- Intensities <- fid <- rawS <- '.' <- NULL
+computeSscore <- function(cel1, cel2, probeFile, bgp, method, 
+                          infoKey, SF1 = NULL, SF2 = NULL, 
+                          verbose = FALSE, trim = NULL) {
   
   #CREATE DATA TABLES FROM CEL FILES
-	celdat1 <- data.table(X = cel1$x, Y = cel1$y, Intensities = cel1$intensities, STDVS = cel1$stdvs, nPixels = cel1$pixels)
-	celdat2 <- data.table(X = cel2$x, Y = cel2$y, Intensities = cel2$intensities, STDVS = cel2$stdvs, nPixels = cel2$pixels)
+	celdat1 <- data.table(X = cel1$x, Y = cel1$y, 
+	                      Intensities = cel1$intensities, 
+	                      STDVS = cel1$stdvs, nPixels = cel1$pixels)
+	celdat2 <- data.table(X = cel2$x, Y = cel2$y, 
+	                      Intensities = cel2$intensities, 
+	                      STDVS = cel2$stdvs, nPixels = cel2$pixels)
 	
-	# ############## Quantile Normalize the CEL intensities and place them back into celdat1 and celdat2:
+	# ############## Quantile Normalize the CEL intensities 
 	#   # This method will use the whole chip to perform the normlization step:
 	# celdat <- data.table(cF1 = celdat1$Intensities,
 	#                      cf2 = celdat2$Intensities)

@@ -9,9 +9,6 @@
 # modified from original AnnotationForge function name: getProbeDataAffy()
 
 # Once the functions have been sourced, see run examples:
-      # load("~/Research/_Ss2_probefiles/Ss2.mta10.probeFile.rda")
-      # probeFile <- probeFile[,sequence := NULL]
-      # fwrite(file = "mta10probeFile.probe_tab",probeFile,sep = "\t")
       # arraytype <- "mta10"
       # datafile <- "mta10probeFile.probe_tab"
       # # For structure of Data:

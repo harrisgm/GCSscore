@@ -1,5 +1,5 @@
 normalize <- function (Score) {
-
+  # function to normalize the GCSscore values:
 	x <- Score
 	Sx <- sum(x)
 	Sxx <- sum(x*x)
@@ -11,13 +11,13 @@ normalize <- function (Score) {
 	Sxx <- sum(x*x)
 	num <- length(x)
 	Sstdev <- ((Sxx-Sx*Sx/num)/num)
-	# Cutoff calculation removed from Sscore 2algorithm
+	# Cutoff calculation removed from GCSscore algorithm:
 	# if (Sstdev < 0.01) {
 	# 	Sstdev <- 1.0
 	# } else {
 	# 	Sstdev <- sqrt(Sstdev)
 	# }
-	# readded on 09.27.19:
+	#
 	Sstdev <- sqrt(Sstdev)
 	meanSx <- Sx/num+meanSx
 	Score <- (Score-meanSx)/Sstdev

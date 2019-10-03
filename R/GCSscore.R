@@ -1,6 +1,8 @@
-GCSscore <- function(celFile1 = NULL, celFile2 = NULL, celTable = NULL, celTab.names = FALSE, typeFilter = 1, method = 1, rm.outmask = FALSE, SF1 = NULL, SF2 = NULL, fileout = FALSE, gzip = FALSE, verbose = FALSE) {
-  # # Insert fake-NULL fix to prevent 'no visible binding for global variable' in R CMD check:
-  # fs1_man_fsetid <- transcript_cluster_id <- probeset_id <- transcriptClusterID <- category <- probesetType <- transcriptID <- '.' <- geneName <- probe_type <- probesetID <- NULL
+GCSscore <- function(celFile1 = NULL, celFile2 = NULL, celTable = NULL,
+                     celTab.names = FALSE, typeFilter = 1, method = 1, 
+                     rm.outmask = FALSE, SF1 = NULL, SF2 = NULL, 
+                     fileout = FALSE, gzip = FALSE, verbose = FALSE) {
+
   # Basic testing that all entered parameters are set to usable values:
   if (!(typeFilter == 0 | typeFilter == 1))stop("typeFilter must be (0) or (1). (1) is the recommended setting")
   if (!(method == 1 | method == 2))stop("method must be (1) or (2)")
@@ -9,7 +11,6 @@ GCSscore <- function(celFile1 = NULL, celFile2 = NULL, celTable = NULL, celTab.n
   else if (is.null(celFile1) & is.null(celFile2)) stopifnot(!is.null(celTable))
   else stop("input either: 2 .CEL files (single-run) or 'celTable' (batch-run)")
   # DEFINE CHIP-TYPES THAT THE SSCORE2 CODE IS COMPATIABLE WITH:
-  # All chiptypes are collected from "$chiptype of affxparser of Affymetrix sample/tissue panel files:
   # All chipXTA and chipClarS have been checked (all chips as of 09.30.2019):
   chip3IVT <- c("Rhesus", "Mouse430_2")
   chipGene <- c("MoGene-2_1-st", "MoGene-1_0-st-v1", "DroGene-1_0-st")

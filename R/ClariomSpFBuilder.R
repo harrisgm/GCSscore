@@ -1,28 +1,18 @@
-# Function to generate 'probeFile' probe-level annotations from platform design (pd) 
-# packages from BioConductor.  The generated 'probeFile' data is as a data.table in 
-# an .rda file.
+# Function to generate 'probeFile' probe-level annotations from platform 
+# design (pd) packages from BioConductor.  The generated probeFile is stored 
+# in a data.table within an .rda file. These 'probeFiles' are then converted 
+# to a custom 'probePackage' using the makeProbePacage() function from
+# the AnnotationForge package.
 
 # This function is for use on ClariomS Affymetrix arrays.
-
-# These 'probeFiles' are then converted to a custom 'probePackage' using AnnotationForge.
-# The necessary functions for data parsing / annotation package creation can be found on Github:
-# https://github.com/harrisgm/GCSscore-probeFile-functions
-
 
 # Examples using platform design packages on Bioconductor, found at:
 # https://www.bioconductor.org/packages/release/data/annotation/
 
 # chip.pd <- "pd.clariom.s.mouse"
 # chip.pd <- "pd.clariom.s.human"
-# chip.df <- "pd.clariom.s.rat"
+# chip.dd <- "pd.clariom.s.rat"
 # probeFile.clariomsrat <- ClariomSpFBuilder(chip.pd = "pd.clariom.s.rat")
-
-# # load necessary libaries:
-# library(data.table)
-# # library(devtools)
-#   # NOTE: devtools not needed if not installing a package from GitHub
-# library(stringr)
-# library(RSQLite)
 
 # Function: 
 ClariomSpFBuilder <- function(chip.pd = NULL, species.pd = NULL) {
