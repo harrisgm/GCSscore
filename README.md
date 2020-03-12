@@ -7,7 +7,26 @@ The `GCSscore` package is used for the differential expression analysis of Affym
 Installation
 ------------
 
-`GCSscore` is a github package that is in the process being uploaded to the BioConductor repository. Until it is uploaded to Bioconductor, the recommended way to install it is to load `R` and ensure that all dependencies are install prior to install the `GCSscore` package from source, as shown below:
+`GCSscore` is an R package that is availabe on GitHub that is also available in the BioConductor repository (release 3.10 and higher). Until the relase of BioConductor 3.11, the most up-to-date version of the GCSscore should be installed from the source files found in this GitHub repository.  This will require the ability to compile packages from source.  Additionally, the GCSscore package builds and installs its own packages for probe-specific data and up-to-date annotations, using source information by using the platform design (.pd) and annotation (.db) packages found on the BioConductor respository.  Therefore, the user must have require the ability to compile packages from source, even if the pacakge is installed from BioConductor.
+
+Requirements to compile packages from source.
+    There are two main prerequisites for building R packages:
+        1. GNU software development tools including a C/C++ compiler; and
+        2. LaTeX for building R manuals and vignettes.
+        
+     For macOS users:
+        1. command line tools needs to be installed.
+        In terminal, run the following command: 
+        
+                xcode-select --install
+        
+        2. MacTeX LaTeX distribution (or similar LaTeX for mac) needs to be installed:
+        Download and install the 'MacTeX.pkg' found at: 
+        
+                http://www.tug.org/mactex/downloading.html
+                
+                
+the recommended way to install it is to load `R` and ensure that all dependencies are install prior to install the `GCSscore` package from source, as shown below:
 
 Dependencies from CRAN (run commands in Rstudio/R.app):
 
