@@ -23,7 +23,7 @@ Requirements to compile packages from source.
         2. MacTeX LaTeX distribution (or similar LaTeX for mac) needs to be installed:
         Download and install the 'MacTeX.pkg' found at: 
         
-                [linked phrase] (http://www.tug.org/mactex/downloading.html)
+                http://www.tug.org/mactex/downloading.html
                 
       For Windows users:
         1. Install Rtools, found at:
