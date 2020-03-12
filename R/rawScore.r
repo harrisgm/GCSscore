@@ -6,5 +6,8 @@ rawScore <- function(diff1, diff2, SDT1, SDT2) {
            sum(SDT1^2)/(N1^2)+sum(SDT2^2)/(N2^2))
   rawS[rawS > 15.0] <- 15.0
   rawS[rawS < -15.0] <- -15.0
+  # Try reducing this threshold to see if helps with asymmetric MTA/CEL files
+  # rawS[rawS > 1.0] <- 1.0
+  # rawS[rawS < -1.0] <- -1.0
   return(rawS)
 }

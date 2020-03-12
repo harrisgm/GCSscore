@@ -1,14 +1,44 @@
 computeSscore <- function(cel1, cel2, probeFile, bgp, method, 
                           infoKey, SF1 = NULL, SF2 = NULL, 
-                          verbose = FALSE, trim = NULL) {
+                          verbose = FALSE, trim = NULL, clean.chip = NULL) {
+  
+  # Define inverse operators:
+  `%!in%` <- Negate(`%in%`)
+  `%!like%` <- Negate(`%like%`)
+   #  SET LIST OF XTA-STYLE CHIPS:
+  XTA.chips <- c("mta10","rta10","hta20","clariomdhuman")
+  
   
   #CREATE DATA TABLES FROM CEL FILES
-	celdat1 <- data.table(X = cel1$x, Y = cel1$y, 
-	                      Intensities = cel1$intensities, 
+	celdat1 <- data.table(X = cel1$x, Y = cel1$y,
+	                      Intensities = cel1$intensities,
 	                      STDVS = cel1$stdvs, nPixels = cel1$pixels)
-	celdat2 <- data.table(X = cel2$x, Y = cel2$y, 
-	                      Intensities = cel2$intensities, 
+	celdat2 <- data.table(X = cel2$x, Y = cel2$y,
+	                      Intensities = cel2$intensities,
 	                      STDVS = cel2$stdvs, nPixels = cel2$pixels)
+
+	# OTHER INTENSITY TRANSFORMATION IDEA:
+	    # Untransformed intensities does seem to be the best bet
+  # Try using pre-normalized intensity values from oligo:
+	# celdat1 <- data.table(X = cel1$x, Y = cel1$y,
+	#                       # Intensities = cel1$intensities,
+	#                       Intensities = (normData@assayData[["exprs"]])[,colnames(normData@assayData[["exprs"]])==celfile1],
+	#                       STDVS = cel1$stdvs, nPixels = cel1$pixels)
+	# 
+	# celdat2 <- data.table(X = cel2$x, Y = cel2$y,
+	#                       # Intensities = cel2$intensities,
+	#                       Intensities = (normData@assayData[["exprs"]])[,colnames(normData@assayData[["exprs"]])==celfile2],
+	#                       STDVS = cel2$stdvs, nPixels = cel2$pixels)
+	# 
+  # Maybe the problem the whole time has been the lack of the log2 transformation:
+	# celdat1 <- data.table(X = cel1$x, Y = cel1$y,
+	#                       Intensities = log2(cel1$intensities),
+	#                       STDVS = log2(cel1$stdvs), nPixels = cel1$pixels)
+	# celdat2 <- data.table(X = cel2$x, Y = cel2$y,
+	#                       Intensities = log2(cel2$intensities),
+	#                       STDVS = log2(cel2$stdvs), nPixels = cel2$pixels)
+
+	
 	
 	# ############## Quantile Normalize the CEL intensities 
 	#   # This method will use the whole chip to perform the normlization step:
@@ -30,9 +60,9 @@ computeSscore <- function(cel1, cel2, probeFile, bgp, method,
 	if (is.null(SF1)) {
 		if (identical(method, "pmmm")) {
 			# SF1 <- calcSF(celdat1[,Intensities][probeFile[,fid]] - celdat1[,Intensities][bgp[,fid]], probeFile, trim)
-			SF1 <- calcSF(celdat1[,Intensities][probeFile[,fid]] - celdat1[,Intensities][probeFile[,MM_fid]], probeFile, trim)
+			SF1 <- calcSF(celdat1[,Intensities][probeFile[,fid]] - celdat1[,Intensities][probeFile[,MM_fid]], probeFile, trim, clean.chip)
 		} else {
-			SF1 <- celdat1[,calcSF(Intensities[probeFile[,fid]] - mismatch(probeFile, bgp, Intensities), probeFile, trim)]
+			SF1 <- celdat1[,calcSF(Intensities[probeFile[,fid]] - mismatch(probeFile, bgp, Intensities), probeFile, trim, clean.chip)]
 		}
 	} else if ((!is.null(SF1)) & SF1 > 0) {
 	    SF1 <- SF1
@@ -41,9 +71,9 @@ computeSscore <- function(cel1, cel2, probeFile, bgp, method,
 	#SCALING FACTOR CEL 2
 	if (is.null(SF2)) {
 		if (identical(method, "pmmm")) {
-			SF2 <- calcSF(celdat2[,Intensities][probeFile[,fid]] - celdat2[,Intensities][probeFile[,MM_fid]], probeFile, trim)
+			SF2 <- calcSF(celdat2[,Intensities][probeFile[,fid]] - celdat2[,Intensities][probeFile[,MM_fid]], probeFile, trim, clean.chip)
 		} else {
-			SF2 <- celdat2[,calcSF(Intensities[probeFile[,fid]] - mismatch(probeFile, bgp, Intensities), probeFile, trim)]
+			SF2 <- celdat2[,calcSF(Intensities[probeFile[,fid]] - mismatch(probeFile, bgp, Intensities), probeFile, trim, clean.chip)]
 		}
 	} else if ((!is.null(SF2)) & SF2 > 0) {
 	    SF2 <- SF2
@@ -74,6 +104,16 @@ computeSscore <- function(cel1, cel2, probeFile, bgp, method,
 	 	message(paste("SDT2:", SDT2))
 	}
 	
+	# EDIT 03.08.20:
+	# ALL OF THE ABOVE SHOULD BE THE SAME AND IT SHOULD INCLUDE ALL OF THE PROBESETIDS (>= 4 PROBES), 
+	# SINCE THAT ACCOUNTS FOR THE ALMOST ALL OF PROBES ON THE CHIP:
+	
+	# IF CHIP-TYPE IS XTA-STYLE AND METHOD = TCID,
+	# THEN REMOVE THE JUNCTION PROBES FROM THE PROBEFILE, SINCE THERE ARE PURELY FOR EXON-LEVEL ANALYSIS:
+	if (clean.chip %in% XTA.chips & key(probeFile) == "transcriptclusterid"){
+	  # remove probes with a 'probesetid' with a 'JUC' designation:
+	  probeFile <- probeFile[probesetid %!like% "JUC"]
+	}
 	#CALCULATE PM/MM VALUES
 	if (method[1] == "pmmm") {
 		#SUBSET INTENSITY VALUES BASED ON PM/MM LISTS

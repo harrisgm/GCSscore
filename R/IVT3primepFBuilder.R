@@ -63,37 +63,39 @@ IVT3primepFBuilder <- function(chip.pd = NULL, species.pd = NULL) {
   # key the probeFile to sort by fid (or other column type):
   setkey(probeFile,fid)
   
-  # GMH 10.1.19: Remove the probe sequences if not needed (much larger file sizes newer arrays):
-  # if (rm.PMseq){
-  #   probeFile <- probeFile[,sequence := NULL]
-  # }
+  # Remove unnecessary 'atom' column, if present:
+  if (!is.na(match("atom", names(probeFile)))){
+    probeFile[,c("atom") := NULL]
+  }
+  # 03.08.20: Go ahead and remove the "sequence" column:
+  # There is no point in including it in the probeFile:
+  # Remove probe sequences from ClariomS-style arrays to minimize file size:
+  probeFile <- probeFile[,sequence := NULL]
+  
   
   # GMH: set the intermediate files to output to write to a temporary directory:
   outdir <- tempdir()
-  
-  probe.tab.name <-  paste("GCSs.",chip,".probeFile.probe_tab",sep="")
-  probe.tab.loc <- paste(outdir,probe.tab.name,sep="")
+  message("writing intermediary .probe_tab file to temporary directory")
+  probe.tab <-  paste("GCSs.",chip,".probeFile.probe_tab",sep="")
+  probe.tab.loc <- paste(outdir,"/",probe.tab,sep="")
   fwrite(file = probe.tab.loc,probeFile,sep = "\t")
-  arraytype <- chip
-  # datafile <- "mouse4302.probeFile.probe_tab"
-  # For structure of Data:
-  # sapply(probeFile,class)
+  # arraytype <- chip
+  probe.pkg.name <- paste(chip,".probeFile",sep="")
   
-  # Running stock function from AnnotationForge package version 1.26.0
-  makeProbePackage(
-    arraytype = chip,
+  AnnotationForge::makeProbePackage(
+    arraytype = probe.pkg.name,
     outdir = outdir,
     species = species.pd,
     maintainer= "Guy Harris <harrisgm@vcu.edu>",
-    version = "0.0.1",
+    version = "0.0.3",
     datafile = probe.tab.loc,
     importfun = "get3primeIVTprobefileData",
     check = FALSE)
   
-  pkg.loc <- paste(outdir,"/",chip,".probeFile",sep="")
-  
+  pkg.loc <- paste(outdir,"/",probe.pkg.name,sep="")
   # install the package, in the tempdir(), to the R library using 'devtools':
-  devtools::install(pkg = pkg.loc)
+  devtools::install(pkg = pkg.loc,upgrade = "never")
+  
   message(paste("GCSscore 'probeFile' created from BioConductor platform design (pd) package: ",chip.pd,sep=""))
   message(paste("GCSscore 'probeFile' package installed for chip: ",chip,sep=""))
   return(message("DONE"))	
