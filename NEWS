@@ -1,17 +1,32 @@
 CHANGES IN VERSION 1.0.0
 ------------------------
 
-    o All GCSscore probe packages are now automatically 
+    o All GCSscore probeFile and annotation packages are now automatically 
       generated from Bioconductor sources (platform design (pd) and
       annotation (.db) packages) by using the makeProbePackage() function 
       from the 'AnnotationForge' package.  These are generated and 
       installed based on the chip-type being analyzed by the end user 
       on an as-needed basis. 
-
+      
+    o GCSscore requires the ability to compile packages from source.
+    There are two main prerequisites for building R packages:
+        1. GNU software development tools including a C/C++ compiler; and
+        2. LaTeX for building R manuals and vignettes.
+        
+     For macOS users:
+        1. command line tools needs to be installed.
+        In terminal, run the following command: 
+        
+                xcode-select --install
+        
+        2. MacTeX LaTeX distribution (or similar LaTeX for mac) needs to be installed:
+        Download and install the 'MacTeX.pkg' found at: 
+        
+                http://www.tug.org/mactex/downloading.html
 NEW FEATURES
     o Initial release of R package.
 
-    o All GCSscore probe packages are now automatically 
+    o All GCSscore probeFile and annotation packages are now automatically 
       generated from Bioconductor sources (platform design (pd) and
       annotation (.db) packages) by using the makeProbePackage() function 
       from the 'AnnotationForge' package.  These are generated and 
