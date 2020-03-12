@@ -23,7 +23,19 @@ Requirements to compile packages from source.
         2. MacTeX LaTeX distribution (or similar LaTeX for mac) needs to be installed:
         Download and install the 'MacTeX.pkg' found at: 
         
-                http://www.tug.org/mactex/downloading.html
+                [linked phrase] (http://www.tug.org/mactex/downloading.html)
+                
+      For Windows users:
+        1. Install Rtools, found at:
+                
+                https://cran.rstudio.com/bin/windows/Rtools/
+                
+           NOTE: Rtools appropriate to the version of R you are using, you should also ensure that you've arranged your system PATH as recommended by Rtools (you can choose to do this automatically as part of Rtools installation if you like).
+           
+        2. Install the MikTeX LaTeX distribution for Windows:
+        Download and install the package from:
+        
+                http://miktex.org/download
                 
                 
 the recommended way to install it is to load `R` and ensure that all dependencies are install prior to install the `GCSscore` package from source, as shown below:
