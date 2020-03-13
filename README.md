@@ -46,8 +46,9 @@ Dependencies from CRAN (run commands in Rstudio/R.app):
 install.packages("data.table")
 install.packages("R.utils")
 install.packages("dplR")
+install.packages("devtools")
 ```
-
+The GCSscore package will use "devtools" to build all of the packages from source on the fly.
 Dependencies from Bioconductor (run commands in Rstudio/R.app):
 
 ```r
