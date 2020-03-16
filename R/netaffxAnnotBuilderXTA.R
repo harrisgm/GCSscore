@@ -31,6 +31,7 @@ netaffxAnnotBuilderXTA <- function(chip.pd = NULL, clean.chip = NULL, species.pd
     netaffx.TCid.annot <- netaffx.TCid.all[,c("transcriptclusterid")]
     netaffx.TCid.annot[,symbol := sapply(strsplit(netaffx.TCid.all$geneassignment, " // "), "[", 2)]
     netaffx.TCid.annot[,ref_id := sapply(strsplit(netaffx.TCid.all$mrnaassignment, " // "), "[", 1)]
+    netaffx.TCid.annot[,name := sapply(strsplit(netaffx.TCid.all$geneassignment, " // "), "[", 3)]
     netaffx.TCid.annot[,chr := sapply(strsplit(netaffx.TCid.all$seqname, " // "), "[", 1)]
     netaffx.TCid.annot[,start := netaffx.TCid.all$start]
     netaffx.TCid.annot[,stop := netaffx.TCid.all$stop]
@@ -60,34 +61,22 @@ netaffxAnnotBuilderXTA <- function(chip.pd = NULL, clean.chip = NULL, species.pd
     netaffx.annot.tab <- paste(clean.chip,".netaffx.annot.probe_tab",sep="")
     netaffx.annot.loc <- paste(outdir,"/",netaffx.annot.tab,sep="")
     fwrite(netaffx.db.annot,file=netaffx.annot.loc,sep = "\t")
-    annot.pkg.name = paste(clean.chip,".annot.TCid.netaffx",sep="")
+    annot.pkg.name = paste(clean.chip,".TC.netaffx.annot",sep="")
     
-    # arraytype <- clean.chip
-    # source function for running TCid-based annotations through makeProbePackage()
-    # this one is fast and custom, using minimal code and data.tables:
-    
-    
-    # # Running stock function from AnnotationForge package version 1.26.0
-    AnnotationForge::makeProbePackage(
-      arraytype = annot.pkg.name,
+
+    makeAnnotPackageGCSs(
+      arraytype = clean.chip,
       outdir = outdir,
       species = species.pd,
+      chip.pd = chip.pd,
       maintainer= "Guy Harris <harrisgm@vcu.edu>",
-      version = "0.0.2",
+      version = "0.0.5",
+      pkgname = annot.pkg.name,
+      pkg.db = packageName,
       datafile = netaffx.annot.loc,
       importfun = "getTCnetaffxdatXTA",
       check = FALSE)
     
-    # Try running custom makeProbePackage (that has updated descriptions in a local direcyory:
-    # makeGCSannotPackage(
-    #   arraytype = annot.pkg.name,
-    #   outdir = outdir,
-    #   species = species.pd,
-    #   maintainer= "Guy Harris <harrisgm@vcu.edu>",
-    #   version = "0.0.1",
-    #   datafile = netaffx.annot.loc,
-    #   importfun = "getTCnetaffxdat",
-    #   check = FALSE)
     
     message("This transcriptcluster/TCid annotation package contains data parsed from the following source: ")
     message(paste("  (1) The nettaffx annotations from BioConductor platform design (pd) package: ",chip.pd,sep=""))
@@ -135,19 +124,24 @@ netaffxAnnotBuilderXTA <- function(chip.pd = NULL, clean.chip = NULL, species.pd
     netaffx.annot.tab <- paste(clean.chip,".netaffx.annot.probe_tab",sep="")
     netaffx.annot.loc <- paste(outdir,"/",netaffx.annot.tab,sep="")
     fwrite(netaffx.db.annot,file=netaffx.annot.loc,sep = "\t")
-    annot.pkg.name = paste(clean.chip,".annot.PSR.netaffx",sep="")
+    annot.pkg.name = paste(clean.chip,".PSR.netaffx.annot",sep="")
 
-    # # Running stock function from AnnotationForge package version 1.26.0
-    AnnotationForge::makeProbePackage(
-      arraytype = annot.pkg.name,
+
+    makeAnnotPackageGCSs(
+      arraytype = clean.chip,
       outdir = outdir,
       species = species.pd,
+      chip.pd = chip.pd,
       maintainer= "Guy Harris <harrisgm@vcu.edu>",
-      version = "0.0.2",
+      version = "0.0.5",
+      pkgname = annot.pkg.name,
+      pkg.db = packageName,
       datafile = netaffx.annot.loc,
       importfun = "getPSRnetaffxdatXTA",
       check = FALSE)
-
+    
+    
+    
     message("This probesestid/PSR annotation package contains data parsed from the following source: ")
     message(paste("  (1) The nettaffx annotations from BioConductor platform design (pd) package: ",chip.pd,sep=""))
     message(paste("  (2) The concise list of well annotated genes from BioConductor annotation data (.db) package: ", packageName,sep=""))

@@ -15,7 +15,7 @@
 # probeFile.clariomsrat <- ClariomSpFBuilder(chip.pd = "pd.clariom.s.rat")
 
 # Function: 
-ClariomSpFBuilder <- function(chip.pd = NULL, species.pd = NULL) {
+ClariomSpFBuilder <- function(chip.pd = NULL, clean.chip = NULL, species.pd = NULL, pF.type = NULL) {
   # Install necessary pd.* package if not already installed:
   if (!requireNamespace(chip.pd, quietly = TRUE)){
     BiocManager::install(chip.pd)
@@ -39,6 +39,8 @@ ClariomSpFBuilder <- function(chip.pd = NULL, species.pd = NULL) {
   for (i in seq(along=tables)) {
     chip.pdinfo[[i]] <- dbGetQuery(conn=con, statement=paste("SELECT * FROM '", tables[[i]], "'", sep=""))
   }
+  # Close the connections now that the data from the SQL file has been read:
+  dbDisconnect(conn=con)
   # Extract probe-level data:
   chip.pmfeature <- as.data.table(chip.pdinfo[["pmfeature"]])
   chip.featureSet <- as.data.table(chip.pdinfo[["featureSet"]])
@@ -99,24 +101,24 @@ ClariomSpFBuilder <- function(chip.pd = NULL, species.pd = NULL) {
   probe.tab <-  paste("GCSs.",chip,".probeFile.probe_tab",sep="")
   probe.tab.loc <- paste(outdir,"/",probe.tab,sep="")
   fwrite(file = probe.tab.loc,probeFile,sep = "\t")
-  # arraytype <- chip
-  probe.pkg.name <- paste(chip,".probeFile",sep="")
+  probe.pkg.name <- paste(clean.chip,".probeFile",sep="")
 
-  # For structure of Data:
-  # sapply(probeFile,class)
   
-  # Running stock function from AnnotationForge package version 1.26.0
-  AnnotationForge::makeProbePackage(
-    arraytype = probe.pkg.name,
+  makeProbePackageGCSs(
+    arraytype = clean.chip,
     outdir = outdir,
     species = species.pd,
+    chip.pd = chip.pd,
     maintainer= "Guy Harris <harrisgm@vcu.edu>",
-    version = "0.0.3",
+    version = "0.0.5",
+    pkgname = probe.pkg.name,
     datafile = probe.tab.loc,
+    pF.type = pF.type,
     importfun = "getClariomSprobefileData",
     check = FALSE)
   
   pkg.loc <- paste(outdir,"/",probe.pkg.name,sep="")
+  
   # install the package, in the tempdir(), to the R library using 'devtools':
   devtools::install(pkg = pkg.loc,upgrade = "never")
   message(paste("GCSscore 'probeFile' created from BioConductor platform design (pd) package: ",chip.pd,sep=""))

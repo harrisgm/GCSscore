@@ -1,0 +1,10 @@
+Package: @PKGNAME@
+Title: Parsed Affymetrix netaffx annotations for chip @ARRAYTYPE@)
+Version: @VERSION@
+Created: @TODAY@
+Author: The Bioconductor Project www.bioconductor.org 
+Description: This package was created from netaffx annotations from the platform design package: @CHIP.PD@, and from the corresponding annotation (db) package: @PKG.DB@.  This package utilizes a customized version of the makeProbePackage()function and a custom 'ProbePkg-template', both of which are published the AnnotationForge package (version 1.28.0).
+Maintainer: @MAINTAINER@
+Depends: R (>= 3.5.0), data.table (>= 1.12.0)
+License:  LGPL
+biocViews: AnnotationForge, AnnotationData, AffymetrixChip, @ARRAYTYPE@, @SPECIES@

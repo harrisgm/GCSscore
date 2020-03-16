@@ -15,7 +15,7 @@
 # probeFile.cDhu <- ClariomDXTApFBuilder(chip.pd = "pd.clariom.d.human")
 
 # Function:
-ClariomDXTApFBuilder <- function(chip.pd = NULL, species.pd = NULL) {
+ClariomDXTApFBuilder <- function(chip.pd = NULL, clean.chip = NULL, species.pd = NULL, pF.type = NULL) {
   # Install necessary pd.* package if not already installed:
   if (!requireNamespace(chip.pd, quietly = TRUE)){
     BiocManager::install(chip.pd)
@@ -39,6 +39,8 @@ ClariomDXTApFBuilder <- function(chip.pd = NULL, species.pd = NULL) {
   for (i in seq(along=tables)) {
     chip.pdinfo[[i]] <- dbGetQuery(conn=con, statement=paste("SELECT * FROM '", tables[[i]], "'", sep=""))
   }
+  # Close the connections now that the data from the SQL file has been read:
+  dbDisconnect(conn=con)
   # Extract probe-level data:
   chip.pmfeature <- as.data.table(chip.pdinfo[["pmfeature"]])
   # Remove unnecessary 'atom' column, if present:
@@ -158,27 +160,19 @@ ClariomDXTApFBuilder <- function(chip.pd = NULL, species.pd = NULL) {
   probe.tab <-  paste("GCSs.",chip,".probeFile.probe_tab",sep="")
   probe.tab.loc <- paste(outdir,"/",probe.tab,sep="")
   fwrite(file = probe.tab.loc,probeFile,sep = "\t")
-  # arraytype <- chip
-  probe.pkg.name <- paste(chip,".probeFile",sep="")
-  # datafile <- "mouse4302.probeFile.probe_tab"
-  # For structure of Data:
-  # sapply(probeFile,class)
+  probe.pkg.name <- paste(clean.chip,".probeFile",sep="")
   
-  # outdir <- tempdir()
-  # netaffx.annot.tab <- paste(clean.chip,".netaffx.annot.probe_tab",sep="")
-  # netaffx.annot.loc <- paste(outdir,"/",netaffx.annot.tab,sep="")
-  # fwrite(netaffx.db.annot,file=netaffx.annot.loc,sep = "\t")
-  # annot.pkg.name = paste(clean.chip,".annot.TCid.netaffx",sep="")
-  # 
   
-  # Running stock function from AnnotationForge package version 1.26.0
-  AnnotationForge::makeProbePackage(
-    arraytype = probe.pkg.name,
+  makeProbePackageGCSs(
+    arraytype = clean.chip,
     outdir = outdir,
     species = species.pd,
+    chip.pd = chip.pd,
     maintainer= "Guy Harris <harrisgm@vcu.edu>",
-    version = "0.0.3",
+    version = "0.0.5",
+    pkgname = probe.pkg.name,
     datafile = probe.tab.loc,
+    pF.type = pF.type,
     importfun = "getXTAprobefileData",
     check = FALSE)
   

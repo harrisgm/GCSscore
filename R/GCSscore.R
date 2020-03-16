@@ -5,8 +5,8 @@ GCSscore <- function(celFile1 = NULL, celFile2 = NULL, celTable = NULL,
                      fileout = FALSE, gzip = FALSE, verbose = FALSE) {
   
   # Version checks: Lastest versions of the GCSscore-built packages and BioC:
-  probepkg.vers = "0.0.3"
-  annot.vers = "0.0.2"
+  probepkg.vers = "0.0.5"
+  annot.vers = "0.0.5"
   bioC.latest = "3.10"
   # Define inverse operators:
   `%!in%` <- Negate(`%in%`)
@@ -158,6 +158,7 @@ if (!requireNamespace(probepkg, quietly = TRUE)){
   
 # SETUP / PACAKGE CREATION FOR XTA-ARRAYS ---------------------------------
   if (chip %in% chipXTA){
+    pF.type <- "XTA"
     message(paste("** Checking if Bioconductor annotation (.db) packages are installed chip-type: ", chip," **  \n",sep=""))
     # check if transcriptcluser.db annotation package is installed:
     packageName <- paste(clean.chip, "transcriptcluster.db", sep = "")
@@ -186,41 +187,41 @@ if (!requireNamespace(probepkg, quietly = TRUE)){
       message(paste("\n ** Generating probeFile package for chip-type: ",chip," **",sep = ""))
       message(" *** This may take a few minutes for XTA-style arrays! ***")
       message("*This package will only be generated once for each chip-type*\n*Or if probeFile version for the chip-type needs to be updated*")
-      ClariomDXTApFBuilder(chip.pd = pdpkg, species.pd = species.pd)
+      ClariomDXTApFBuilder(chip.pd = chip.pd, clean.chip = clean.chip, species.pd = species.pd, pF.type = pF.type)
     }
     
-    annotTCid <- paste(clean.chip, ".annot.TCid.netaffx", sep = "")
+    annotTCid <- paste(clean.chip, ".TC.netaffx.annot", sep = "")
     if (!requireNamespace(annotTCid, quietly = TRUE)){
       message(paste("transcript-level netaffx-based annotation package needs to be installed for chip-type: ", chip,sep=""))
       message(paste("\n ** Generating transcript-level annotation package for chip-type: ",chip," **",sep = ""))
       packageName <- paste(clean.chip, "transcriptcluster.db", sep = "")
       annotName <- paste(clean.chip, "transcriptcluster", sep = "")
-      netaffxAnnotBuilderXTA(chip.pd = pdpkg ,clean.chip,species.pd,packageName,annotName)
+      netaffxAnnotBuilderXTA(chip.pd = chip.pd, clean.chip = clean.chip, species.pd = species.pd,packageName = packageName,annotName = annotName)
       
     } else if (loadNamespace(annotTCid)[[".__NAMESPACE__."]][["spec"]][["version"]] < annot.vers) {
       message(paste("transcript-level netaffx-based annotation package (", chip,") needs to be updated to: ",annot.vers, sep=""))
       message(paste("\n ** Generating transcript-level annotation package for chip-type: ",chip," **",sep = ""))
       packageName <- paste(clean.chip, "transcriptcluster.db", sep = "")
       annotName <- paste(clean.chip, "transcriptcluster", sep = "")
-      netaffxAnnotBuilderXTA(chip.pd = pdpkg ,clean.chip,species.pd,packageName,annotName)
+      netaffxAnnotBuilderXTA(chip.pd = chip.pd ,clean.chip = clean.chip,species.pd = species.pd,packageName = packageName,annotName = annotName)
       
     } else {message(paste("The latest verison (", annot.vers,") of the transcript-level netaffx-based annotation package already installed for chip-type: ", chip,sep=""))}
     
     # 2. check probesetid-level annotation package:
-    annotPSR <- paste(clean.chip, ".annot.PSR.netaffx", sep = "")
+    annotPSR <- paste(clean.chip, ".PSR.netaffx.annot", sep = "")
     if (!requireNamespace(annotPSR, quietly = TRUE)){
       message(paste("transcript-level netaffx-based annotation package needs to be installed for chip-type: ", chip,sep=""))
       message(paste("\n ** Generating probeset-level annotation package for chip-type: ",chip," **",sep = ""))
       packageName <- paste(clean.chip, "probeset.db", sep = "")
       annotName <- paste(clean.chip, "probeset", sep = "")
-      netaffxAnnotBuilderXTA(chip.pd = pdpkg ,clean.chip,species.pd,packageName,annotName)
+      netaffxAnnotBuilderXTA(chip.pd = chip.pd ,clean.chip,species.pd,packageName,annotName)
       
     } else if (loadNamespace(annotPSR)[[".__NAMESPACE__."]][["spec"]][["version"]] < annot.vers) {
       message(paste("transcript-level netaffx-based annotation package (", chip,") needs to be updated to: ",annot.vers, sep=""))
       message(paste("\n ** Generating probeset-level annotation package for chip-type: ",chip," **",sep = ""))
       packageName <- paste(clean.chip, "probeset.db", sep = "")
       annotName <- paste(clean.chip, "probeset", sep = "")
-      netaffxAnnotBuilderXTA(chip.pd = pdpkg ,clean.chip,species.pd,packageName,annotName)
+      netaffxAnnotBuilderXTA(chip.pd = chip.pd,clean.chip,species.pd,packageName,annotName)
       
     } else {message(paste("The latest verison (", annot.vers,") of the probeset-level netaffx-based annotation package already installed for chip-type: ", chip,sep=""))}
     
@@ -262,8 +263,8 @@ if (!requireNamespace(probepkg, quietly = TRUE)){
       # END OF EDITS ON 03.08.20:
       
       # Load the correct annotation package for method:
-      netaffx.annot <- eval(parse(text = paste(clean.chip,".annot.TCid.netaffx::",clean.chip,".annot.TCid.netaffx",sep="")))
-      message(paste("loading annotations from package: ", clean.chip,".annot.TCid.netaffx",sep = ""))
+      netaffx.annot <- eval(parse(text = paste(clean.chip,".TC.netaffx.annot::",clean.chip,".TC.netaffx.annot",sep="")))
+      message(paste("loading annotations from package: ", clean.chip,".TC.netaffx.annot",sep = ""))
       
       # Ensure keys are correctly set:
       if (!identical(key(info), method)) setkeyv(info, method)
@@ -288,8 +289,8 @@ if (!requireNamespace(probepkg, quietly = TRUE)){
       infoKey <- key(info)
       
       # Load the correct annotation package for method:
-      netaffx.annot <- eval(parse(text = paste(clean.chip,".annot.PSR.netaffx::",clean.chip,".annot.PSR.netaffx",sep="")))
-      message(paste("loading annotations from package: ", clean.chip,".annot.PSR.netaffx",sep = ""))
+      netaffx.annot <- eval(parse(text = paste(clean.chip,".PSR.netaffx.annot::",clean.chip,".PSR.netaffx.annot",sep="")))
+      message(paste("loading annotations from package: ", clean.chip,".PSR.netaffx.annot",sep = ""))
       
       # Ensure keys are correctly set:
       if (!identical(key(info), method)) setkeyv(info, method)
@@ -323,6 +324,7 @@ if (!requireNamespace(probepkg, quietly = TRUE)){
 # GCSscore package setup for clariomS arrays (03.08.20):
 
 if (chip %in% chipClarS){
+  pF.type <- "clariomS"
   message(paste("** Checking if Bioconductor annotation (.db) packages are installed chip-type: ", chip," **  \n",sep=""))
   # check if transcriptcluser.db annotation package is installed:
   packageName <- paste(clean.chip, "transcriptcluster.db", sep = "")
@@ -334,7 +336,9 @@ if (chip %in% chipClarS){
   }  else{message(paste("Annotation package (",packageName,") already installed for chip-type: ", chip,sep=""))}
   
   # While performing checks, get species information for packageName:
-  species.pd <- eval(parse(text= paste("as.data.table(",packageName,"::",annotName,"ORGANISM)",sep = "")))
+  # species.pd <- eval(parse(text= paste("as.data.table(",packageName,"::",annotName,"ORGANISM)",sep = "")))
+  # THERE IS NO NEED TO LOAD THE WHOLE ANNOTATION PACKAGE HERE
+  species.pd <- eval(parse(text= paste(packageName,"::",annotName,"ORGANISM",sep = "")))
   # replace ' ' with '_' to match makeProbePackage():
   species.pd <- gsub(" ", "_",species.pd)
   
@@ -344,12 +348,12 @@ if (chip %in% chipClarS){
     message(paste("\n ** Generating probeFile package for chip-type: ",chip," **",sep = ""))
     # message(" *** This may take a few minutes for XTA-style arrays! ***")
     message("*This package will only be generated once for each chip-type*\n*Or if probeFile version for the chip-type needs to be updated*")
-    ClariomSpFBuilder(chip.pd = pdpkg, species.pd = species.pd)
+    ClariomSpFBuilder(chip.pd = pdpkg, clean.chip = clean.chip, species.pd = species.pd, pF.type = pF.type)
   }
   
   # Now check for each netaffx.annot package:
   # 1. check transcript-level annotation package:
-  annotTCid <- paste(clean.chip, ".annot.TCid.netaffx", sep = "")
+  annotTCid <- paste(clean.chip, ".TC.netaffx.annot", sep = "")
   if (!requireNamespace(annotTCid, quietly = TRUE)){
     message(paste("transcript-level netaffx-based annotation package needs to be installed for chip-type: ", chip,sep=""))
 
@@ -369,7 +373,7 @@ if (chip %in% chipClarS){
   } else {message(paste("The latest verison (", annot.vers,") of the transcript-level netaffx-based annotation package already installed for chip-type: ", chip,sep=""))
   }
   # QUICK VIEW OF ANNOT FILE:
-  # test <- clariomsmouse.annot.TCid.netaffx::clariomsmouse.annot.TCid.netaffx
+  # test <- clariomsmouse.TC.netaffx.annot::clariomsmouse.TC.netaffx.annot
   
   trim <- 0.04
   message(" *NOTE: 'method' is automatically set to (1) (transcript_cluster_id-level) for all ClariomS arrays")
@@ -391,8 +395,8 @@ if (chip %in% chipClarS){
   # setkey(info,"transcriptclusterid")
   
   # Load the correct annotation package for method:
-  netaffx.annot <- eval(parse(text = paste(clean.chip,".annot.TCid.netaffx::",clean.chip,".annot.TCid.netaffx",sep="")))
-  message(paste("loading annotations from package: ", clean.chip,".annot.TCid.netaffx",sep = ""))
+  netaffx.annot <- eval(parse(text = paste(clean.chip,".TC.netaffx.annot::",clean.chip,".TC.netaffx.annot::",sep="")))
+  message(paste("loading annotations from package: ", clean.chip,".TC.netaffx.annot",sep = ""))
   
   # Ensure keys are correctly set:
   if (!identical(key(info), method)) setkeyv(info, method)
@@ -426,6 +430,7 @@ if (chip %in% chipClarS){
 
 if (chip %in% chip3IVT){
   trim <- 0.02
+  pF.type <- "3primeIVT"
   # detailed 'method' for 3prime IVT arrays (PM-bkg_gc OR PM-MM)
   if (method == 1){
     method <- methodTag <- "gc"
@@ -455,7 +460,7 @@ if (chip %in% chip3IVT){
     message(paste("\n ** Generating probeFile package for chip-type: ",chip," **",sep = ""))
     # message(" *** This may take a few minutes for XTA-style arrays! ***")
     message("*This package will only be generated once for each chip-type*\n*Or if probeFile version for the chip-type needs to be updated*")
-    IVT3primepFBuilder(chip.pd = pdpkg, species.pd = species.pd)
+    IVT3primepFBuilder(chip.pd = pdpkg, clean.chip = clean.chip, species.pd = species.pd, pF.type = pF.type)
   }
   
   probeFile <- eval(parse(text = paste(clean.chip,".probeFile::",clean.chip,".probeFile",sep="")))

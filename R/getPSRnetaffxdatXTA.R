@@ -1,7 +1,6 @@
 getPSRnetaffxdatXTA <- function(arraytype, datafile,
-                                pkgname = NULL, comparewithcdf = FALSE){
+                                pkgname, pkg.db, chip.pd, comparewithcdf = FALSE){
   
-  pkgname <- arraytype
   dat <- data.table::fread(datafile)
   pt = data.table::data.table(probesetid = dat$probesetid,
                               symbol = dat$symbol,
@@ -22,18 +21,15 @@ getPSRnetaffxdatXTA <- function(arraytype, datafile,
   dataEnv = new.env(parent=emptyenv())
   assign(pkgname, pt, envir=dataEnv)
   
-  datasource = "This package contains a fully featured annotation file for use with the GCSscore R package.  It was created the netaffx.rda data contained within the chiptype platform design (.pd) and annotation data (.db) packages Bioconductor."
-  # if(is.character(datafile))
-  #   datasource = paste(datasource, " The file name was ", gsub("_", "\\\\_", datafile),
-  #                      ".", sep="")
+  datasource = paste("This package contains a detailed probesetid-level annotation file for use with the GCSscore R package.  It was created by parsing annotation data from the 'netaffxProbeset.rda' data contained within the Bioconductor chip-type platform design (pd) package: ",chip.pd, "and from the Bioconductor transcriptclusterid-level annotation data (db) package: ",pkg.db,".  This package was created using a customized version of the makeProbePackage function and a custom 'ProbePkg-template', both of which are sourced from the AnnotationForge package (version 1.28.0).  These modificed files are contained in the GCSscore R package, which is available on Github and Bioconductor",sep="")
+  
   
   symVal = list(ARRAYTYPE  = arraytype,
                 DATASOURCE = datasource,
                 NROW       = as.character(nrow(pt)),
-                NCOL       = as.character(ncol(pt)))
-  
-  # if(comparewithcdf) .lgExtraParanoia(pt, cdfname)
-  
-  # return(list(pkgname = pkgname, symVal = symVal, dataEnv = dataEnv))
+                NCOL       = as.character(ncol(pt)),
+                CHIP.PD    = chip.pd,
+                PKG.DB     = pkg.db)
+
   return(list(pkgname = pkgname, symVal = symVal, dataEnv = dataEnv))
 }

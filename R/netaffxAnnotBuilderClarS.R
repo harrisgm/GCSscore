@@ -9,6 +9,28 @@
 # Examples using platform design packages on Bioconductor, found at:
 # https://www.bioconductor.org/packages/release/data/annotation/
 
+# # START OF TESTING VARIABLES
+# chip <- "RTA-1_0"
+# chip <- "MTA-1_0"
+# chip <- "Mouse430_2"
+# chip <- "Clariom_S_Mouse"
+# clean.chip <- tolower(gsub("-|_", "",chip))
+# clean.chip <- tolower(gsub("v1", "",clean.chip))
+# probepkg <- paste(clean.chip,".probeFile",sep="")
+# pdpkg <- paste("pd.",tolower(gsub("-|_", ".",chip)),sep = "")
+# chip.pd <- pdpkg
+# packageName <- paste(clean.chip, "transcriptcluster.db", sep = "")
+# annotName <- paste(clean.chip, "transcriptcluster", sep = "")
+# # packageName <- paste(clean.chip, "probeset.db", sep = "")
+# # annotName <- paste(clean.chip, "probeset", sep = "")
+# species.pd <- eval(parse(text= paste(packageName,"::",annotName,"ORGANISM",sep = "")))
+# species.pd <- gsub(" ", "_",species.pd)
+# # END OF TESTING VARIABLES, START OF FUNCTION TEST:
+# 
+# # netaffxAnnotBuilderClarS(chip.pd, clean.chip,species.pd,packageName,annotName)
+# netaffxAnnotBuilderXTA(chip.pd, clean.chip,species.pd,packageName,annotName)
+# END OF FUNCTION TEST:
+
 netaffxAnnotBuilderClarS <- function(chip.pd = NULL, clean.chip = NULL, species.pd = NULL,
                                      packageName = NULL, annotName = NULL) {
   # Install necessary pd.* package if not already installed:
@@ -61,17 +83,22 @@ netaffxAnnotBuilderClarS <- function(chip.pd = NULL, clean.chip = NULL, species.
     netaffx.annot.tab <- paste(clean.chip,".netaffx.annot.probe_tab",sep="")
     netaffx.annot.loc <- paste(outdir,"/",netaffx.annot.tab,sep="")
     fwrite(netaffx.db.annot,file=netaffx.annot.loc,sep = "\t")
-    annot.pkg.name = paste(clean.chip,".annot.TCid.netaffx",sep="")
+    annot.pkg.name = paste(clean.chip,".TC.netaffx.annot",sep="")
     
     # # Running stock function from AnnotationForge package version 1.26.0
-    AnnotationForge::makeProbePackage(
-      arraytype = annot.pkg.name,
+    # AnnotationForge::makeProbePackage(
+    makeProbePackageGCSs(
+      # arraytype = annot.pkg.name,
+      arraytype = clean.chip,
       outdir = outdir,
       species = species.pd,
+      chip.pd = chip.pd,
       maintainer= "Guy Harris <harrisgm@vcu.edu>",
-      version = "0.0.2",
+      version = "0.0.5",
+      pkgname = annot.pkg.name,
+      pkg.db = packageName,
       datafile = netaffx.annot.loc,
-      importfun = "getTCnetaffxdatClarS",
+      importfun = "getTCnetaffxdatXTA",
       check = FALSE)
     
     # If time, try making custom makeProbePackage (that has updated descriptions in a local directory):

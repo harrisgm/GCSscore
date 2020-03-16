@@ -1,0 +1,7 @@
+# A NAMESPACE is strictly required by R 2.14 or higher.
+
+# Import the data.table function, fread. It is needed to read in the data.table contained in the .rda file. 
+importFrom(data.table, fread)
+
+# Export everything, since there is only one datafile contained within this package.
+exportPattern(".")
