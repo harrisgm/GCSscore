@@ -2,12 +2,12 @@
 THE `GCSscore` PACKAGE
 ===================
 
-The `GCSscore` package is used for the differential expression analysis of Affymetrix microarrays. It is designed to be able to support all Affymetrix chips.  It functions by reading information directly from array files in their native format (.CEL files), and it performs calculations on individual probe comparisons between arrays without the need for prior probe grouping summarization and normalizations steps.
+The `GCSscore` package is used for the differential expression analysis of Affymetrix microarrays. It is designed to be able to support all Affymetrix chips.  The package reads probe level information directly from array files in their native format (.CEL files), and then performs calculations on individual probe comparisons between arrays without the need for prior probe grouping summarization and normalizations steps.
 
 Installation
 ------------
 
-`GCSscore` is an R package that is availabe on GitHub that is also available in the BioConductor repository (release 3.10 and higher). Until the relase of BioConductor 3.11, the most up-to-date version of the GCSscore should be installed from the source files found in this GitHub repository.  This will require the ability to compile packages from source.  Additionally, the GCSscore package builds and installs its own packages for probe-specific data and up-to-date annotations, using source information by using the platform design (.pd) and annotation (.db) packages found on the BioConductor respository.  Therefore, the user must have require the ability to compile packages from source, even if the pacakge is installed from BioConductor.
+`GCSscore` is an R package that is available on GitHub that is also available in the BioConductor repository (release 3.10 and higher). Until the release of BioConductor 3.11, the most up-to-date version of the GCSscore should be installed from the source files found in this GitHub repository.  This will require the ability to compile packages from source.  Additionally, the GCSscore package builds and installs its own packages for probe-specific data and up-to-date annotations, using source information by using the platform design (.pd) and annotation (.db) packages found on the BioConductor repository.  Therefore, the user must have require the ability to compile packages from source, even if the package is installed from BioConductor.
 
 Requirements to compile packages from source.
     There are two main prerequisites for building R packages:
