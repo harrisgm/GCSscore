@@ -34,12 +34,13 @@ For macOS users:
                 
 For Windows users:
  
- 	1. Install Rtools, found at:
+        1. Install Rtools, found at:
                 
                 https://cran.rstudio.com/bin/windows/Rtools/
                 
         2. Install the MikTeX LaTeX distribution for Windows:
-        Download and install the package from:
+        
+                Download and install the package from:
         
                 http://miktex.org/download
                 
