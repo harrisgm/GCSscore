@@ -20,8 +20,8 @@ export(
   ## Export probeFile package builder functions
   ## from R/getGCSscoreProbeData.R:
   
-  get3primeIVTprobefileData,
-  getWTgeneexonprobefileData,
-  getClariomSprobefileData,
-  getXTAprobefileData
+  # get3primeIVTprobefileData,
+  # getWTgeneexonprobefileData,
+  # getClariomSprobefileData,
+  # getXTAprobefileData
 )
