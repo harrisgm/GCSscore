@@ -21,22 +21,24 @@ There are two main prerequisites for complete compilation of the package and the
      2. LaTeX for building R manuals and vignettes.
         
 For macOS users:
-        1. command line tools needs to be installed.
-        In terminal, run the following command: 
         
-                xcode-select --install
+        1. command line tools needs to be installed.  In terminal, run the following command: 
+        
+		xcode-select --install
         
         2. MacTeX LaTeX distribution (or similar LaTeX for mac) needs to be installed:
-        Download and install the 'MacTeX.pkg' found at: 
+        
+		Download and install the 'MacTeX.pkg' found at: 
         
                 http://www.tug.org/mactex/downloading.html
                 
 For Windows users:
-        1. Install Rtools, found at:
+ 
+ 	1. Install Rtools, found at:
                 
                 https://cran.rstudio.com/bin/windows/Rtools/
                 
-           NOTE: Rtools appropriate to the version of R you are using, you should also ensure that you've arranged your system PATH as recommended by Rtools (you can choose to do this automatically as part of Rtools installation if you like).
+NOTE: After installing in Rtools version appropriate to the version of R you are using, you should also ensure that you've arranged your system PATH as recommended by Rtools (you can choose to do this automatically as part of Rtools installation if you like).
            
         2. Install the MikTeX LaTeX distribution for Windows:
         Download and install the package from:
@@ -44,7 +46,7 @@ For Windows users:
                 http://miktex.org/download
                 
                 
-the recommended way to install it is to load `R` and ensure that all dependencies are install prior to install the `GCSscore` package from source, as shown below:
+The recommended way to install it is to load `R` and ensure that all dependencies are install prior to install the `GCSscore` package from source, as shown below:
 
 Dependencies from CRAN (run commands in Rstudio/R.app):
 
