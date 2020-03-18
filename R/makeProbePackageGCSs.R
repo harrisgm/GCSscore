@@ -86,7 +86,8 @@ makeProbePackageGCSs <- function(arraytype,
   save(list  = ls(importRes$dataEnv),
        file  = file.path(createRes$pkgdir, "data", paste(pkgname, ".rda", sep="")),
        envir = importRes$dataEnv,
-       compress = TRUE)
+       # compress = TRUE)
+       compress = FALSE)
 
   R_exe <- file.path(R.home(), "bin", "R")
   ## R CMD check
