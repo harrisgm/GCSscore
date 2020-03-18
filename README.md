@@ -9,7 +9,11 @@ Installation
 
 `GCSscore` is an R package that is available on GitHub that is also available in the BioConductor repository (release 3.10 and higher). Until the release of BioConductor 3.11, the most up-to-date version of the GCSscore should be installed from the source files found in this GitHub repository.  This will require the ability to compile packages from source.  Additionally, the GCSscore package builds and installs its own packages for probe-specific data and up-to-date annotations, using source information by using the platform design (.pd) and annotation (.db) packages found on the BioConductor repository.  Therefore, the user must have require the ability to compile packages from source, even if the package is installed from BioConductor.
 
-Requirements to compile packages from source.
+The package depends on a functional installing of the "devtools" package in order to build the internal packages and to install this package directly from github.  More information regarding the installation and updating of the devtools package can be found in the "Updating to the latest version of devtools" section of the package documentation found at: 
+ 
+ 	https://www.r-project.org/nosvn/pandoc/devtools.html
+
+Complete compilation of the GCSscore package and the accompanying vignette and manual PDFs have additional requirements, as described below:
     There are two main prerequisites for building R packages:
         1. GNU software development tools including a C/C++ compiler; and
         2. LaTeX for building R manuals and vignettes.
