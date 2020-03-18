@@ -15,7 +15,7 @@ makeProbePackageGCSs <- function(arraytype,
                              pkgname,
                              chip.pd,
                              pF.type,
-                             outdir  = ".",
+                             outdir,
                              quiet = FALSE, check = TRUE, build = TRUE, unlink = TRUE, ...)
 {
   ## Bureucracy: check arguments

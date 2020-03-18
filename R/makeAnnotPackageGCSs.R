@@ -15,7 +15,7 @@ makeAnnotPackageGCSs <- function(arraytype,
                              pkgname,
                              chip.pd,
                              pkg.db,
-                             outdir  = ".",
+                             outdir,
                              quiet = FALSE, check = TRUE, build = TRUE, unlink = TRUE, ...)
 {
   ## Bureucracy: check arguments

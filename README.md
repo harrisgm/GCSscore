@@ -2,7 +2,7 @@
 THE `GCSscore` PACKAGE
 ===================
 
-The `GCSscore` package is used for the differential expression analysis of Affymetrix microarrays. In the current release, the GCSscore package fully supports all ClariomS and Clariom/XTA chips, and it has full support for the following two 3'IVT GeneChips: the Mouse Genome 430 2.0 Array, and the Human Genome U133 Plus 2.0 Array.  In general, the package reads probe level information directly from array files in their native format (.CEL files), and then performs calculations on individual probe comparisons between arrays without the need for prior probe grouping summarization and normalizations steps.
+The `GCSscore` package is used for the differential expression analysis of Affymetrix microarrays. In the current release, the GCSscore package fully supports all ClariomS and Clariom/XTA chips, and it has full support for the following two 3' IVT GeneChips: the Mouse Genome 430 2.0 Array, and the Human Genome U133 Plus 2.0 Array.  In general, the package reads probe level information directly from array files in their native format (.CEL files), and then performs calculations on individual probe comparisons between arrays without the need for prior probe grouping summarization and normalizations steps.
 
 Installation
 ------------
