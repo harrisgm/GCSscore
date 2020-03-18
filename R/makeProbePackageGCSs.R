@@ -59,21 +59,24 @@ makeProbePackageGCSs <- function(arraytype,
   createRes <- createPackage(pkgname,
                              destinationDir = outdir,
                              # originDir = system.file("ProbePkg-template", package=thispkg),
-                             originDir = "~/Dropbox (Personal)/GCSscore_SUBMISSION_10162019/BioC_source/GCSscore/inst/ProbePkg-template-ClariomS",
+                             # originDir = "~/Dropbox (Personal)/GCSscore_SUBMISSION_10162019/BioC_source/GCSscore/inst/ProbePkg-template-ClariomS",
+                             originDir = system.file("ProbePkg-template-ClariomS", package = "GCSscore"),
                              symbolValues = symbolValues,
                              unlink = unlink, quiet = quiet)
   } else if (pF.type == "XTA") {
     createRes <- createPackage(pkgname,
                                destinationDir = outdir,
                                # originDir = system.file("ProbePkg-template", package=thispkg),
-                               originDir = "~/Dropbox (Personal)/GCSscore_SUBMISSION_10162019/BioC_source/GCSscore/inst/ProbePkg-template-XTA",
+                               # originDir = "~/Dropbox (Personal)/GCSscore_SUBMISSION_10162019/BioC_source/GCSscore/inst/ProbePkg-template-XTA",
+                               originDir = system.file("ProbePkg-template-XTA", package = "GCSscore"),
                                symbolValues = symbolValues,
                                unlink = unlink, quiet = quiet)
   } else if (pF.type == "3primeIVT") {
     createRes <- createPackage(pkgname,
                                destinationDir = outdir,
                                # originDir = system.file("ProbePkg-template", package=thispkg),
-                               originDir = "~/Dropbox (Personal)/GCSscore_SUBMISSION_10162019/BioC_source/GCSscore/inst/ProbePkg-template-3IVT",
+                               # originDir = "~/Dropbox (Personal)/GCSscore_SUBMISSION_10162019/BioC_source/GCSscore/inst/ProbePkg-template-3IVT",
+                               originDir = system.file("ProbePkg-template-3IVT", package = "GCSscore"),
                                symbolValues = symbolValues,
                                unlink = unlink, quiet = quiet)
   } else stop("probeFile cannot be built.  This chip-type/generation is not supported")

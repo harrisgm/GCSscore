@@ -87,7 +87,7 @@ netaffxAnnotBuilderClarS <- function(chip.pd = NULL, clean.chip = NULL, species.
     
     # # Running stock function from AnnotationForge package version 1.26.0
     # AnnotationForge::makeProbePackage(
-    makeProbePackageGCSs(
+    makeAnnotPackageGCSs(
       # arraytype = annot.pkg.name,
       arraytype = clean.chip,
       outdir = outdir,

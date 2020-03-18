@@ -60,14 +60,16 @@ makeAnnotPackageGCSs <- function(arraytype,
   createRes <- createPackage(pkgname,
                              destinationDir = outdir,
                              # originDir = system.file("ProbePkg-template", package=thispkg),
-                             originDir = "~/Dropbox (Personal)/GCSscore_SUBMISSION_10162019/BioC_source/GCSscore/inst/affx-annot-PSR-template",
+                             # originDir = "~/Dropbox (Personal)/GCSscore_SUBMISSION_10162019/BioC_source/GCSscore/inst/affx-annot-PSR-template",
+                             originDir = system.file("affx-annot-PSR-template", package = "GCSscore"),
                              symbolValues = symbolValues,
                              unlink = unlink, quiet = quiet)
   } else if (pkg.db %like% "transcript"){
     createRes <- createPackage(pkgname,
                                destinationDir = outdir,
                                # originDir = system.file("ProbePkg-template", package=thispkg),
-                               originDir = "~/Dropbox (Personal)/GCSscore_SUBMISSION_10162019/BioC_source/GCSscore/inst/affx-annot-TC-template",
+                               # originDir = "~/Dropbox (Personal)/GCSscore_SUBMISSION_10162019/BioC_source/GCSscore/inst/affx-annot-TC-template",
+                               originDir = system.file("affx-annot-TC-template", package = "GCSscore"),
                                symbolValues = symbolValues,
                                unlink = unlink, quiet = quiet)
   }
