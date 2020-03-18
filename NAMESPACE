@@ -6,9 +6,9 @@ import(data.table)
 import(affxparser)
 import(stringr)
 importFrom(devtools, install)
-importFrom(AnnotationForge, makeProbePackage)
+# importFrom(AnnotationForge, makeProbePackage)
 importFrom(stats, median)
-importFrom(graphics, hist)
+# importFrom(graphics, hist)
 importFrom(dplR, tbrm)
 
 
@@ -20,8 +20,8 @@ export(
   ## Export probeFile package builder functions
   ## from R/getGCSscoreProbeData.R:
   
-  # get3primeIVTprobefileData,
+  get3primeIVTprobefileData,
   # getWTgeneexonprobefileData,
-  # getClariomSprobefileData,
-  # getXTAprobefileData
+  getClariomSprobefileData,
+  getXTAprobefileData
 )
