@@ -13,10 +13,12 @@ The package depends on a functional installing of the "devtools" package in orde
  
  	https://www.r-project.org/nosvn/pandoc/devtools.html
 
-Complete compilation of the GCSscore package and the accompanying vignette and manual PDFs have additional requirements, as described below:
-    There are two main prerequisites for building R packages:
-        1. GNU software development tools including a C/C++ compiler; and
-        2. LaTeX for building R manuals and vignettes.
+Complete compilation of the GCSscore package and the accompanying vignette and manual PDFs have additional requirements, as described below.
+
+    There are two main prerequisites for complete compilation of the package and the accompanying PDF documention:
+    
+     1. GNU software development tools including a C/C++ compiler; and
+     2. LaTeX for building R manuals and vignettes.
         
      For macOS users:
         1. command line tools needs to be installed.
