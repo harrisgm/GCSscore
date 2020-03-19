@@ -26,7 +26,6 @@ importFrom(dplR, tbrm)
 # import(devtools)
 # import(AnnotationForge)
 # importFrom(AnnotationForge, makeProbePackage)
-import(affxparser)
 
 export(
   ## Export main function:  
