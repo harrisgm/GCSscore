@@ -22,5 +22,7 @@ export(
   get3primeIVTprobefileData,
   # getWTgeneexonprobefileData,
   getClariomSprobefileData,
-  getXTAprobefileData
+  getXTAprobefileData,
+  makeAnnotPackageGCSs,
+  makeProbePackageGCSs
 )
