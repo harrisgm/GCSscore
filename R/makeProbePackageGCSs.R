@@ -8,15 +8,15 @@
 ## Copyright R. Gentleman and W. Huber, 2003, all rights reserved
 ##----------------------------------------------------------------------
 makeProbePackageGCSs <- function(arraytype,
-                             importfun = "getProbeDataAffy",
-                             maintainer,
-                             version,
-                             species,
-                             pkgname,
-                             chip.pd,
-                             pF.type,
-                             outdir,
-                             quiet = FALSE, check = TRUE, build = TRUE, unlink = TRUE, ...)
+                                 importfun = "getProbeDataAffy",
+                                 maintainer,
+                                 version,
+                                 species,
+                                 pkgname,
+                                 chip.pd,
+                                 pF.type,
+                                 outdir,
+                                 quiet = FALSE, check = TRUE, build = TRUE, unlink = TRUE, ...)
 {
   ## Bureucracy: check arguments
   if (missing(maintainer) || !is.character(maintainer))
@@ -30,39 +30,42 @@ makeProbePackageGCSs <- function(arraytype,
   if (missing(species) || !is.character(species))
     stop(paste("'species' is missing or invalid. Please specify the species that the",
                "package will pertain to using the form: Genus_species (e.g., Homo_sapiens).", sep = "\n"))
-
+  
   ## Call the import function
   ## importRes is a list with three elements:
   ## $pkgname : package name
   ## $dataEnv : environment containing data objects
   ## $symVal  : named list with symbol-value substitutions
   if (!quiet) cat("Importing the data.\n")
+  # importRes <- do.call(importfun, c(arraytype = arraytype, pkgname = pkgname, chip.pd = chip.pd, list(...)))
   importRes <- do.call(importfun, c(arraytype = arraytype, pkgname = pkgname, chip.pd = chip.pd, list(...)))
-
+  
+  
   pkgname <- importRes$pkgname
   thispkg <- "AnnotationForge"
   desc    <- packageDescription(thispkg)
-
+  
   stopifnot(desc$Package ==thispkg)
   thispkgVers <- desc$Version
   
   symbolValues <- c(importRes$symVal,
                     list(
-                         VERSION            = version,
-                         CREATOR            = paste("package", thispkg, "version", thispkgVers),
-                         ANNOTATIONDBIVERSION = thispkgVers,                                      
-                         MAINTAINER         = maintainer,
-                         SPECIES            = species,
-                         CHIP.PD            = chip.pd))
- 
+                      VERSION            = version,
+                      CREATOR            = paste("package", thispkg, "version", thispkgVers),
+                      ANNOTATIONDBIVERSION = thispkgVers,                                      
+                      MAINTAINER         = maintainer,
+                      SPECIES            = species,
+                      CHIP.PD            = chip.pd))
+  
   if (pF.type == "clariomS"){
-  createRes <- createPackage(pkgname,
-                             destinationDir = outdir,
-                             # originDir = system.file("ProbePkg-template", package=thispkg),
-                             # originDir = "~/Dropbox (Personal)/GCSscore_SUBMISSION_10162019/BioC_source/GCSscore/inst/ProbePkg-template-ClariomS",
-                             originDir = system.file("ProbePkg-template-ClariomS", package = "GCSscore"),
-                             symbolValues = symbolValues,
-                             unlink = unlink, quiet = quiet)
+    createRes <- createPackage(pkgname,
+                               destinationDir = outdir,
+                               # originDir = system.file("ProbePkg-template", package=thispkg),
+                               # originDir = "~/Dropbox (Personal)/GCSscore_SUBMISSION_10162019/BioC_source/GCSscore/inst/ProbePkg-template-ClariomS",
+                               # originDir = system.file("ProbePkg-template-ClariomS", package = "GCSscore"),
+                               originDir = "~/Desktop/GitHub_syncing_rev2_2020/GitHub_new_clone/GCSscore/inst/ProbePkg-template-ClariomS/",
+                               symbolValues = symbolValues,
+                               unlink = unlink, quiet = quiet)
   } else if (pF.type == "XTA") {
     createRes <- createPackage(pkgname,
                                destinationDir = outdir,
@@ -75,8 +78,8 @@ makeProbePackageGCSs <- function(arraytype,
     createRes <- createPackage(pkgname,
                                destinationDir = outdir,
                                # originDir = system.file("ProbePkg-template", package=thispkg),
-                               # originDir = "~/Dropbox (Personal)/GCSscore_SUBMISSION_10162019/BioC_source/GCSscore/inst/ProbePkg-template-3IVT",
-                               originDir = system.file("ProbePkg-template-3IVT", package = "GCSscore"),
+                               originDir = "~/Dropbox (Personal)/GCSscore_SUBMISSION_10162019/BioC_source/GCSscore/inst/ProbePkg-template-3IVT",
+                               # originDir = system.file("ProbePkg-template-3IVT", package = "GCSscore"),
                                symbolValues = symbolValues,
                                unlink = unlink, quiet = quiet)
   } else stop("probeFile cannot be built.  This chip-type/generation is not supported")
@@ -87,7 +90,7 @@ makeProbePackageGCSs <- function(arraytype,
        file  = file.path(createRes$pkgdir, "data", paste(pkgname, ".rda", sep="")),
        envir = importRes$dataEnv,
        compress = TRUE)
-
+  
   R_exe <- file.path(R.home(), "bin", "R")
   ## R CMD check
   cdir <- getwd()
@@ -113,7 +116,7 @@ makeProbePackageGCSs <- function(arraytype,
     if (unlink)
       unlink(paste(pkgname, ".Rcheck", sep=""), recursive = TRUE)
   }
-
+  
   ## R CMD build
   if (build) {
     if (!quiet)

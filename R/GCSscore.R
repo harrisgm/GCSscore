@@ -5,7 +5,7 @@ GCSscore <- function(celFile1 = NULL, celFile2 = NULL, celTable = NULL,
                      fileout = FALSE, gzip = FALSE, verbose = FALSE) {
   
   # Version checks: Lastest versions of the GCSscore-built packages and BioC:
-  probepkg.vers = "0.0.5"
+  probepkg.vers = "0.0.6"
   annot.vers = "0.0.5"
   bioC.latest = "3.10"
   # Define inverse operators:
