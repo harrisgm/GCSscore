@@ -1,26 +1,35 @@
+
+# NAMESPACE NOTES: https://kbroman.org/pkg_primer/pages/depends.html
+# If it’s not used in the code but is used in examples, vignettes, or tests: Suggests
+# If you need to attach the package with library(): Depends
+# Imports is used for packages that are needed by your package but that don’t need to be loaded with library().
+
+#You shouldn’t use Depends or Imports if it’s not necessary, as then your package can’t be installed if one of those is not installable. Packages in Suggests don’t need to be available.
+
 import(methods)
 import(utils)
 import(Biobase)
 import(RSQLite)
 import(data.table)
-import(affxparser)
-import(stringr)
-# import(devtools)
-# import(AnnotationForge)
-importFrom(devtools, install)
-# importFrom(AnnotationForge, makeProbePackage)
+
+import(affxparser, readCelHeader, readCel)
+importFrom(devtools, install, install_github)
+importFrom(stringr, str_remove_all)
 importFrom(stats, median)
 importFrom(graphics, hist)
 importFrom(dplR, tbrm)
 
+# import(stringr)
+# import(devtools)
+# import(AnnotationForge)
+# importFrom(AnnotationForge, makeProbePackage)
+import(affxparser)
 
 export(
-  ## Export main function:
-  
+  ## Export main function:  
   GCSscore
-  ## Export probeFile package builder functions
-  ## from R/getGCSscoreProbeData.R:
-  
+
+  ## Export probeFile package builder functions:
   # get3primeIVTprobefileData,
   # getWTgeneexonprobefileData,
   # getClariomSprobefileData,
