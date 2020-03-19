@@ -89,9 +89,10 @@ GCSscore <- function(celFile1 = NULL, celFile2 = NULL, celTable = NULL,
       celHead1 <- readCelHeader(celTable[[2]][1])
       chip <- chipType1[1] 
       clean.chip <- tolower(gsub("-|_", "",chip))
+      # cleanear chip (to remove 'v1' from cetain gene/exon arrays):
+      clean.chip <- tolower(gsub("v1", "",clean.chip))
       } else stop("Not all .CEL files in the 'batch.csv' are the same chip-type")
-    # cleanear chip (to remove 'v1' from cetain gene/exon arrays):
-    clean.chip <- tolower(gsub("v1", "",clean.chip))
+
     
   } else if (!is.null(celFile1) & !is.null(celFile2)) {
     celHead1 <- readCelHeader(celFile1)
@@ -101,7 +102,7 @@ GCSscore <- function(celFile1 = NULL, celFile2 = NULL, celTable = NULL,
       clean.chip <- tolower(gsub("-|_", "",chip))
       # cleanear chip (to remove 'v1' from cetain gene/exon arrays):
       clean.chip <- tolower(gsub("v1", "",clean.chip))
-    }
+    } else stop("'celFile1' and 'celFile2' are not the same chip-type")
   }
 
 # CHECK IF CHIP-TYPE IS SUPPORTED -----------------------------------------
