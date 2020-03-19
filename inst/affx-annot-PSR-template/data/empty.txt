@@ -1,3 +1,0 @@
-Placeholder file in 'data' folder for built-in package compilation.
-
-This file is not used by the installed package.
