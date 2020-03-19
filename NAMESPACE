@@ -25,5 +25,5 @@ export(
   getXTAprobefileData,
   makeAnnotPackageGCSs,
   makeProbePackageGCSs,
-  IVT3primepFbuilder
+  IVT3primepFBuilder
 )
