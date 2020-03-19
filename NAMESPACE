@@ -8,11 +8,13 @@
 
 import(methods)
 import(utils)
-import(Biobase)
+#import(Biobase)
 import(RSQLite)
 import(data.table)
+#import(Biobase)
 
-import(affxparser, readCelHeader, readCel)
+importFrom(Biobase, ExpressionSet, createPackage)
+importFrom(affxparser, readCelHeader, readCel)
 importFrom(devtools, install, install_github)
 importFrom(stringr, str_remove_all)
 importFrom(stats, median)
