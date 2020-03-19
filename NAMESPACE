@@ -5,27 +5,27 @@ import(RSQLite)
 import(data.table)
 import(affxparser)
 import(stringr)
-import(devtools)
-import(AnnotationForge)
-# importFrom(devtools, install)
+# import(devtools)
+# import(AnnotationForge)
+importFrom(devtools, install)
 # importFrom(AnnotationForge, makeProbePackage)
 importFrom(stats, median)
-# importFrom(graphics, hist)
+importFrom(graphics, hist)
 importFrom(dplR, tbrm)
 
 
 export(
   ## Export main function:
   
-  GCSscore,
+  GCSscore
   ## Export probeFile package builder functions
   ## from R/getGCSscoreProbeData.R:
   
-  get3primeIVTprobefileData,
+  # get3primeIVTprobefileData,
   # getWTgeneexonprobefileData,
-  getClariomSprobefileData,
-  getXTAprobefileData,
-  makeAnnotPackageGCSs,
-  makeProbePackageGCSs,
-  IVT3primepFBuilder
+  # getClariomSprobefileData,
+  # getXTAprobefileData,
+  # makeAnnotPackageGCSs,
+  # makeProbePackageGCSs,
+  # IVT3primepFBuilder
 )

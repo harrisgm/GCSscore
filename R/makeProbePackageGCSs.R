@@ -62,8 +62,8 @@ makeProbePackageGCSs <- function(arraytype,
                                destinationDir = outdir,
                                # originDir = system.file("ProbePkg-template", package=thispkg),
                                # originDir = "~/Dropbox (Personal)/GCSscore_SUBMISSION_10162019/BioC_source/GCSscore/inst/ProbePkg-template-ClariomS",
-                               # originDir = system.file("ProbePkg-template-ClariomS", package = "GCSscore"),
-                               originDir = "~/Desktop/GitHub_syncing_rev2_2020/GitHub_new_clone/GCSscore/inst/ProbePkg-template-ClariomS/",
+                               originDir = system.file("ProbePkg-template-ClariomS", package = "GCSscore"),
+                               # originDir = "~/Desktop/GitHub_syncing_rev2_2020/GitHub_new_clone/GCSscore/inst/ProbePkg-template-ClariomS/",
                                symbolValues = symbolValues,
                                unlink = unlink, quiet = quiet)
   } else if (pF.type == "XTA") {
@@ -78,8 +78,8 @@ makeProbePackageGCSs <- function(arraytype,
     createRes <- createPackage(pkgname,
                                destinationDir = outdir,
                                # originDir = system.file("ProbePkg-template", package=thispkg),
-                               originDir = "~/Dropbox (Personal)/GCSscore_SUBMISSION_10162019/BioC_source/GCSscore/inst/ProbePkg-template-3IVT",
-                               # originDir = system.file("ProbePkg-template-3IVT", package = "GCSscore"),
+                               # originDir = "~/Dropbox (Personal)/GCSscore_SUBMISSION_10162019/BioC_source/GCSscore/inst/ProbePkg-template-3IVT",
+                               originDir = system.file("ProbePkg-template-3IVT", package = "GCSscore"),
                                symbolValues = symbolValues,
                                unlink = unlink, quiet = quiet)
   } else stop("probeFile cannot be built.  This chip-type/generation is not supported")
@@ -87,7 +87,7 @@ makeProbePackageGCSs <- function(arraytype,
   ## Write the data objects
   if (!quiet) cat("Writing the data.\n")
   save(list  = ls(importRes$dataEnv),
-       file  = file.path(createRes$pkgdir, "data", paste(pkgname, ".rda", sep="")),
+       file  = file.path(createRes$pkgdir, "extdata", paste(pkgname, ".rda", sep="")),
        envir = importRes$dataEnv,
        compress = TRUE)
   

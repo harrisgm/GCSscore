@@ -76,7 +76,7 @@ makeAnnotPackageGCSs <- function(arraytype,
   ## Write the data objects
   if (!quiet) cat("Writing the data.\n")
   save(list  = ls(importRes$dataEnv),
-       file  = file.path(createRes$pkgdir, "data", paste(pkgname, ".rda", sep="")),
+       file  = file.path(createRes$pkgdir, "extdata", paste(pkgname, ".rda", sep="")),
        envir = importRes$dataEnv,
        compress = TRUE)
 
