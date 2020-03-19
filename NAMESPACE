@@ -24,5 +24,6 @@ export(
   getClariomSprobefileData,
   getXTAprobefileData,
   makeAnnotPackageGCSs,
-  makeProbePackageGCSs
+  makeProbePackageGCSs,
+  IVT3primepFbuilder
 )
