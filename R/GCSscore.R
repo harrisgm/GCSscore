@@ -395,7 +395,7 @@ if (chip %in% chipClarS){
   # setkey(info,"transcriptclusterid")
   
   # Load the correct annotation package for method:
-  netaffx.annot <- eval(parse(text = paste(clean.chip,".TC.netaffx.annot::",clean.chip,".TC.netaffx.annot::",sep="")))
+  netaffx.annot <- eval(parse(text = paste(clean.chip,".TC.netaffx.annot::",clean.chip,".TC.netaffx.annot",sep="")))
   message(paste("loading annotations from package: ", clean.chip,".TC.netaffx.annot",sep = ""))
   
   # Ensure keys are correctly set:
