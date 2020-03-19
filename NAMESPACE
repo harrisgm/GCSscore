@@ -15,8 +15,7 @@ importFrom(dplR, tbrm)
 export(
   ## Export main function:
   
-  GCSscore
-  # GCSscore,
+  GCSscore,
   ## Export probeFile package builder functions
   ## from R/getGCSscoreProbeData.R:
   
