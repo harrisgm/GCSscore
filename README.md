@@ -17,16 +17,16 @@ Complete compilation of the GCSscore package and the accompanying vignette and m
 
 There are two main prerequisites for complete compilation of the package and the accompanying PDF documention:
     
-     1. GNU software development tools including a C/C++ compiler; and
-     2. LaTeX for building R manuals and vignettes.
+  1. GNU software development tools including a C/C++ compiler; and
+  2. LaTeX for building R manuals and vignettes.
         
 For macOS users:
         
-        1. command line tools needs to be installed.  In terminal, run the following command: 
+   1. command line tools needs to be installed.  In terminal, run the following command: 
         
 		xcode-select --install
         
-        2. MacTeX LaTeX distribution (or similar LaTeX for mac) needs to be installed:
+   2. MacTeX LaTeX distribution (or similar LaTeX for mac) needs to be installed:
         
 		Download and install the 'MacTeX.pkg' found at: 
         
