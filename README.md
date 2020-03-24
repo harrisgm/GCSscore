@@ -16,10 +16,12 @@ The package depends on a functional installing of the "devtools" package in orde
 GCSscore requries the ability to compile R packages.  
        
 For macOS users, command line tools needs to be installed.  In terminal, run the following command: 
+		
 		xcode-select --install
         
-For Windows users, install Rtools
-                https://cran.rstudio.com/bin/windows/Rtools/
+For Windows users, install Rtools:
+                
+		https://cran.rstudio.com/bin/windows/Rtools/
                 
 
                 
