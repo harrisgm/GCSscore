@@ -13,27 +13,12 @@ The package depends on a functional installing of the "devtools" package in orde
  
  	https://www.r-project.org/nosvn/pandoc/devtools.html
 
-Complete compilation of the GCSscore package and the accompanying vignette and manual PDFs have additional requirements, as described below.
-
-There are two main prerequisites for complete compilation of the package and the accompanying PDF documention:
-    
-  1. GNU software development tools including a C/C++ compiler; and
-  2. LaTeX for building R manuals and vignettes.
-        
-For macOS users:
-        
-   1. command line tools needs to be installed.  In terminal, run the following command: 
-        
+GCSscore requries the ability to compile R packages.  
+       
+For macOS users, command line tools needs to be installed.  In terminal, run the following command: 
 		xcode-select --install
         
-   2. MacTeX LaTeX distribution (or similar LaTeX for mac) needs to be installed:
-        Download and install the 'MacTeX.pkg' found at: 
-        http://www.tug.org/mactex/downloading.html
-                
-For Windows users:
- 
-        1. Install Rtools, found at:
-                
+For Windows users, install Rtools
                 https://cran.rstudio.com/bin/windows/Rtools/
                 
 
