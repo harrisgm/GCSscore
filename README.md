@@ -3,7 +3,7 @@ THE `GCSscore` PACKAGE
 ===================
 `GCSscore` is an R package that is available on GitHub that is also available in the BioConductor repository (release 3.10 and higher).  The `GCSscore` package is used for the differential expression analysis of Affymetrix microarrays. In the current release, the GCSscore package fully supports all ClariomS and Clariom/XTA chips, and it has full support for the following two 3' IVT GeneChips: the Mouse Genome 430 2.0 Array, and the Human Genome U133 Plus 2.0 Array.  In general, the package reads probe level information directly from array files in their native format (.CEL files), and then performs calculations on individual probe comparisons between arrays without the need for prior probe grouping summarization and normalizations steps.
 
- the GCSscore package builds and installs its own packages for probe-specific data and up-to-date annotations, using source information by using the platform design (.pd) and annotation (.db) packages found on the BioConductor repository.  Therefore, the user must have require the ability to compile packages from source, even if the package is installed from BioConductor.
+The `GCSscore` package builds and installs its own packages for probe-specific data and up-to-date annotations, using source information by using the platform design (.pd) and annotation (.db) packages found on the BioConductor repository.  Therefore, the user must have require the ability to compile packages from source, even if the package is installed from BioConductor.
 
 Installation
 ------------
