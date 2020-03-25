@@ -17,7 +17,7 @@ For macOS users, command line tools needs to be installed.  In terminal, run the
 		
 	xcode-select --install
         
-For windows users, install Rtoools and ensure that it is added to the PATH               
+For windows users, install [Rtoools35.exe](https://cran.r-project.org/bin/windows/Rtools/) and ensure that it is added to the PATH               
 
 Install GCSscore package directly from github using 'devtools': will use "devtools" to build all of the packages from source on the fly.
 
