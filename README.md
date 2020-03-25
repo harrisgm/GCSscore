@@ -17,50 +17,20 @@ GCSscore requries the ability to compile R packages.
        
 For macOS users, command line tools needs to be installed.  In terminal, run the following command: 
 		
-		xcode-select --install
+	xcode-select --install
         
 For Windows users, install Rtools:
                 
-		https://cran.rstudio.com/bin/windows/Rtools/
+	https://cran.rstudio.com/bin/windows/Rtools/
                 
 
-                
- 
-           
-
-                
-                
-The recommended way to install it is to load `R` and ensure that all dependencies are install prior to install the `GCSscore` package from source, as shown below:
-
-Dependencies from CRAN (run commands in Rstudio/R.app):
-
-```r
-install.packages("data.table")
-install.packages("R.utils")
-install.packages("dplR")
-install.packages("devtools")
-```
-The GCSscore package will use "devtools" to build all of the packages from source on the fly.
+Install package directly from Github using 'devtools': will use "devtools" to build all of the packages from source on the fly.
 Dependencies from Bioconductor (run commands in Rstudio/R.app):
 
 ```r
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-    
-BiocManager::install("affxparser")
+devtools::install_github("harrisgm/GCSscore")
 ```
 
-Once the dependencies are installed, install the `GCSscore` package from source.
-
-NOTE: the user must have the `GCSscore_1.0.0.tar.gz` file in the current working directory or the user must provide the path to the file location.  Alternatively, the user can use the package install GUI.
-
-GUI use in Rstudio (Tools -> Install Packages --> select 'Install from: Package Archive File (.zip; .tar.gz)' --> use 'Browse' to navigate to the source file location.
-
-(OR, run command in Rstudio/R.app):
-
-```r
-install.packages("GCSscore_1.0.0.tar.gz", repos = NULL, type = "source")
-```
 
 What does the package offer?
 -------------------
