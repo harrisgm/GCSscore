@@ -2,7 +2,11 @@ Package: GCSscore
 Type: Package
 Title: GCSscore: an R package for microarray analysis for
         Affymetrix/Thermo Fisher arrays
+<<<<<<< HEAD
 Version: 1.1.2
+=======
+Version: 1.1.0
+>>>>>>> upstream/master
 Author: Guy M. Harris & Shahroze Abbas & Michael F. Miles
 Maintainer: Guy M. Harris <harrisgm@vcu.edu>
 Description: For differential expression analysis of 3'IVT and WT-style microarrays from Affymetrix/Thermo-Fisher.  Based on S-score algorithm originally described by Zhang et al 2002.
