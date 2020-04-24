@@ -4,7 +4,7 @@
 \description{The main function used to call and run the GCS-score algorithm.}
 \usage{
 GCSscore(celFile1 = NULL, celFile2 = NULL, celTable = NULL,celTab.names = FALSE,
-typeFilter = 1, method = 1, rm.outmask = FALSE, SF1 = NULL, SF2 = NULL, fileout = FALSE, 
+typeFilter = 0, method = 1, rm.outmask = FALSE, SF1 = NULL, SF2 = NULL, fileout = FALSE, 
 gzip = FALSE, verbose = FALSE)
 }
 \arguments{

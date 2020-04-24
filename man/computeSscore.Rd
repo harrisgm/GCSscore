@@ -6,7 +6,7 @@ This internally called function computes the GCS-score values between two Affyme
 }
 \usage{
 computeSscore(cel1, cel2, probeFile, bgp, method, infoKey, SF1 = NULL, SF2 = NULL, 
-              verbose = FALSE, trim = NULL)
+              verbose = FALSE, trim = NULL, clean.chip)
 }
 \arguments{
   \item{cel1}{ The 1st Affymetrix CEL file, as read in by the \code{affxparser} package }
@@ -19,6 +19,7 @@ computeSscore(cel1, cel2, probeFile, bgp, method, infoKey, SF1 = NULL, SF2 = NUL
   \item{SF2}{ If the user has predetermined scaling factors, input user Scaling Factor (SF) for the 2nd CEL file.  Otherwise, the \code{computeSscore} function will caluclate \code{SF2} directly from the 2nd CEL file }
   \item{verbose}{If set to \code{TRUE}, additional information will be printed to the console while the algorithm is running.}
   \item{trim}{ Internal parameter determined by chip type .\code{trim}=0.04 for WT-type arrays and 0.02 for 3' IVT type arrays }
+  \item{clean.chip}{The clean chiptype name, based on the platform design package name.}
   }
 \details{
 This internally called function computes the raw difference scores between the probes on each microarray, then groups the probes into probesets or transcript cluset ids, and normalizes the results to produce GCS-score values. The function returns the values to the main \code{GCscore2}, where BioConductor-based annotations are added to either the exon-level or gene-level probe groupings 

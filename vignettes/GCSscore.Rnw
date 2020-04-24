@@ -7,6 +7,7 @@
 
 \usepackage{hyperref}
 \usepackage[authoryear,round]{natbib}
+\usepackage[utf8]{inputenc}
 
 \textwidth=6.2in
 \textheight=8.5in
@@ -23,14 +24,14 @@
 
 \author{Guy M. Harris, Shahroze Abbas,\\ and Michael F. Miles}
 \begin{document}
-\SweaveOpts{concordance=TRUE}
+% \SweaveOpts{concordance=TRUE}
 \title{Description of GCS-score: Expression Analysis of \\ WT-Type Affymetrix GeneChips \\ from Probe-Level Data}
 
 \maketitle
 \tableofcontents
 \newpage
 \section{Introduction}
-The S-Score algorithm, described by \cite{zhang2002}, \cite{kerns2003}, and \cite{kennedy2006b} is a novel comparative method for gene expression data analysis that performs tests of hypotheses directly from probe level data. It is based on an error model in which the detected signal is assumed to be proportional to the probe signal for highly expressed genes, but assumed to approach a background level (rather than 0) for genes with low levels of expression. This error model is used to calculate relative changes in probe intensities that converts probe signals into multiple measurements with equalized errors, which are summed over a probe set to form the significance score (S-score).  The original S-score method required the mismatch (MM) probes to estimate non-specific binding (NSB) for each perfect-match (PM) probes, and the MM probes were removed the arrays beginning with the Affymetrix Whole Transcriptome (WT) style arrays. This new algorithm uses a gc-content based NSB, thus eliminating the original algorithm's dependence on MM probes.  The GCS-score algorithm is capable of working on all modern Affymetrix array types (3' IVT and up). Assuming no expression differences between chips, the GCS-score output follows a standard normal distribution. Thus, a separate step estimating the probe set expression summary values is not needed and p-values can be easily calculated from the GCS-score output. Furthermore, in previous comparisons of dilution and spike-in microarray datasets, the original S-Score demonstrated greater sensitivity than many existing methods, without sacrificing specificity \citep{kennedy2006}. The \Rpackage{GCSscore} package \citep{harris2019} implements the GCS-score algorithm in the R programming environment, making it available to users of the Bioconductor \footnote{\url{http://www.bioconductor.org/}} project.
+\Rpackage{GCSscore} is an R package for detecting differential expression on affymetrix microarrays that is avaiable on Bioconductor and Github. It is based on the original S-Score algorithm, described by \cite{zhang2002}, \cite{kerns2003}, and \cite{kennedy2006b} is a novel comparative method for gene expression data analysis that performs tests of hypotheses directly from probe level data. It is based on an error model in which the detected signal is assumed to be proportional to the probe signal for highly expressed genes, but assumed to approach a background level (rather than 0) for genes with low levels of expression. This error model is used to calculate relative changes in probe intensities that converts probe signals into multiple measurements with equalized errors, which are summed over a probe set to form the significance score (S-score).  The original S-score method required the mismatch (MM) probes to estimate non-specific binding (NSB) for each perfect-match (PM) probes, and the MM probes were removed the arrays beginning with the Affymetrix Whole Transcriptome (WT) style arrays. This new algorithm uses a gc-content based NSB, thus eliminating the original algorithm's dependence on MM probes.  The GCS-score algorithm is capable of working on all modern Affymetrix array types (3' IVT and up). Assuming no expression differences between chips, the GCS-score output follows a standard normal distribution. Thus, a separate step estimating the probe set expression summary values is not needed and p-values can be easily calculated from the GCS-score output. Furthermore, in previous comparisons of dilution and spike-in microarray datasets, the original S-Score demonstrated greater sensitivity than many existing methods, without sacrificing specificity \citep{kennedy2006}. The \Rpackage{GCSscore} package \citep{harris2019} implements the GCS-score algorithm in the R programming environment, making it available to users of the Bioconductor \footnote{\url{http://www.bioconductor.org/}} project.
 
 \section{What's new in this version}
 This is the initial release.
@@ -49,19 +50,16 @@ sequence of steps to accomplish this is as follows:
 \begin{enumerate}
 \item Create a directory containing all *.CEL files relevant to the planned analysis.
 \item Load the library.
-<<results=hide>>=
-# load GCSscore package:
-library(GCSscore)
 
-# load data.table package for parsing data files
-# outside of the GCSscore package:
-# library(data.table)
-@
+<<loadGCSscore, quiet=TRUE, message=FALSE>>=
+library(GCSscore)
+@ 
+
 \end{enumerate}
 
 The \Rfunction{GCSscore} function utilizes the \Rfunction{readCel} function to directly access the individual .CEL files. Additional information regarding the \Rfunction{readCel} function and detailed description of the structure of .CEL files can be found in the \Rpackage{affxparser} vignette. The \Rfunction{readCel} function allows the \Rpackage{GCSscore} package to access additional variables that are necessary for the noise and probe error estimations.  Almost all other reader packages only read the probe intensities values from the .CEL files
 
-The \Rfunction{GCSscore} function returns an object of class \Robject{data.table}. The class \Robject{data.table} is described in the \Rpackage{data.table} package, which is available on CRAN. The GCS-score values are returned in a \Robject{data.table} object, along with relevant annotation information.  The following examples illustrate the \Rpackage{GCSscore} package. These examples utilize the .CEL data files that are supplied with the \Rpackage{GCSscore} package.
+The \Rfunction{GCSscore} function returns an object of class \Robject{ExpressionSet}, a format defined in the \Rpackage{Biobase} package.  The class \Robject{data.table} is described in the \Rpackage{data.table} package, which is available on CRAN. The GCS-score values are returned in a \Robject{data.table} object, along with relevant annotation information.  The following examples illustrate the \Rpackage{GCSscore} package. These examples utilize the .CEL data files that are supplied with the \Rpackage{GCSscore} package.
 
 A basic GCS-score analysis is generated using the \Rfunction{GCSscore} function:
 
@@ -71,6 +69,64 @@ celpath1 <- system.file("extdata/","MN_2_3.CEL", package = "GCSscore")
 celpath2 <- system.file("extdata/","MN_4_1.CEL", package = "GCSscore")
 # run GCSscore() function directly on the two .CEL files above:
 GCSs.single <- GCSscore(celFile1 = celpath1, celFile2 = celpath2)
+##################
+@
+
+In the vignette, we will go over some use cases for the GCSscore.  The data used here was obtained from the GEO database.  In the first example, we will investigate a set of ClariomS mouse arrays taken from GSE103380.  Further information regarding the experimental design can be found at: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE103880
+
+Begin by creating a temporary directory to store the downloaded files.  For clarity, the directory will have the name of the GEO identifer. 
+
+<<results=hide, quiet=TRUE, message=FALSE>>=
+GEO <- "GSE103380"
+dir.geo <- paste(tempdir(),GEO,sep="/")
+dir.create(dir.geo, showWarnings = FALSE)
+@ 
+
+For this example, select files will be downloaded into the temporary directory.  Here, these files are listed by the GSM ids for individual .CEL files:
+
+\begin{itemize}
+\item GSM2769665	(Naïve Microglia bio replicate 1)
+\item GSM2769666	(Naïve Microglia bio replicate 2)
+\item GSM2769667	(Naïve Microglia bio replicate 3)
+\item GSM2769668	(Naïve Microglia bio replicate 4)
+\item GSM2769669	(Day4 microglia bio replicate 1)
+\item GSM2769670	(Day4 microglia bio replicate 6)
+\item GSM2769671	(Day4 microglia bio replicate 7)
+\item GSM2769672	(Day4 microglia bio replicate 8)
+\end{itemize}
+
+The compressed CEL files are directly directly from GEO using the \Rpackage{GEOquery} package.
+<<results=hide, quiet=TRUE, message=FALSE>>=
+list.cels <- c("GSM2769665","GSM2769666","GSM2769667","GSM2769668",
+               "GSM2769669","GSM2769670","GSM2769671","GSM2769672")
+
+# create function for pulling down the compressed .CEL files:
+cels.get <- function(x)  
+  GEOquery::getGEOSuppFiles(GEO = x,
+                            makeDirectory = FALSE,
+                            baseDir = dir.geo,
+                            filter_regex = "*.CEL.gz")
+# Download the data files from GEO, into the dir.geo temp directory:
+lapply(list.cels,cels.get)
+
+# unzip all of the .CEL files (options set to prevent warning / errors):
+files.geo <- paste(dir.geo,list.files(path=dir.geo, 
+                                      pattern = ".gz"),sep="/")
+# create function to gunzip the compressed data files:
+#   (options set to prevent warning / errors)
+fun.gunzip <- function(x) 
+  R.utils::gunzip(filename = x,
+                  overwrite=TRUE,
+                  remove=FALSE)
+# apply the gunzip function across the vector of compressed CEL files:
+lapply(files.geo,fun.gunzip)
+
+# celtab <- data.table::fread("~/Desktop/BioCheck_GCSs/GCSscore/inst/extdata/GEO103380_batch.csv")
+# setwd(dir.geo)
+# GCSs.GSE103380 <- GCSscore(celTable = celtab, celTab.names = TRUE, fileout = FALSE)
+# GCSs.GSE103380.dt <- data.table::as.data.table(cbind(GCSs.GSE103380@featureData@data,
+#                                                      GCSs.GSE103380@assayData[["exprs"]]))
+
 @ 
 
 The returned object object uses the Biobase data structure: ExpressionSet.  The GCS-score differential expression is contained in the assayData.  For viewing and exporting, it is often desirable to convert the ExpressionSet back to a data.table/data.frame object: 
@@ -86,7 +142,12 @@ GCSs.single.dt <-
 
 # preview the beginning and end of the output.
 # *remove 'gene_name' column for printing to PDF:
-head(GCSs.single.dt[,-c("gene_name","nProbes")])
+# head(GCSs.single.dt[,-c("gene_name","nProbes")])
+
+
+# GCSs.GSE103380.dt <- data.table::as.data.table(cbind(GCSs.GSE103380@featureData@data,
+#                                                      GCSs.GSE103380@assayData[["exprs"]]))
+# head(GCSs.GSE103380.dt)
 @
 
 Parameters for \Rfunction{GCSscore} function include:
@@ -132,60 +193,62 @@ celtab$CelFile2 <- celtab[,paste(path,CelFile2,sep="/")]
 @
 
 The \Rfunction{GCSscore} function will loop through all the runs listed in .CSV file before all GCS-score values are assigned to the end of the same annotation file (each GCS-score run is contained within one column). If the \Robject{celTab.names} is set to TRUE, the column names of each run will correspond to the run name assigned in the first column of the .CSV batch input file.  In this example, all four .CEL files included with the package are run in pairwise fashion.
-
-<<results=hide>>=
-# run GCSscore() function with batch input:
-GCSs.batch <- GCSscore(celTable = celtab, celTab.names = TRUE)
-@
-
-The \Robject{ExpressionSet} returned from the \Rfunction{GCSscore} package can easily be converted back to a \Robject{data.table} structure.  This matches the structure of the .CSV file that is created if the fileout option is set to TRUE.  The conversion of the \Robject{ExpressionSet} object to \Robject{data.table} is as follows:
-
-<<>>=
-# view class of output:
-class(GCSs.batch)[1]
-
-# converting GCS-score output from'ExpressionSet' to 'data.table':
-GCSs.batch.dt <-
-  data.table::as.data.table(cbind(GCSs.batch@featureData@data,
-                                  GCSs.batch@assayData[["exprs"]]))
-
-# preview the beginning and output of the batch output:
-# *remove 'gene_name' and 'nProbes' columns for printing to PDF:
-head(GCSs.batch.dt[,-c("gene_name","nProbes")])
-@
-
-\section{Using GCS-Scores in gene expression analysis}
-Under conditions of no differential expression, the GCS-Score output follows a standard normal (Gaussian) distribution with a mean of 0 and standard deviation of 1. This makes it straightforward to calculate p-values corresponding to rejection of the null hypothesis and acceptance of the alternative hypothesis of differential gene expression. Cutoff values for the GCS-scores can be set to achieve the desired level of significance. As an example, an absolute GCS-score value of 3 (signifying 3 standard deviations from the mean, a typical cutoff value) would correspond to a p-value of 0.003. Under this scenario, the significant genes can be found as:
-
-<<>>= 
-## find scores greater than 3 SD:
-signif <- GCSs.single.dt[abs(Sscore) >= 3]
-
-# View the resulting table:
-# removing 'gene_name' and 'nProbes' columns for PDF printing:
-head(signif[,-c("gene_name","nProbes")])
-@ 
-
-Similarly, the p-values can be calculated as:
-
-<<results=hide>>=
-# Calculate p-valus significant
-## find the corresponding one-sided p-values:
-signif[,p.values.1 := (1 - pnorm(abs(signif[,Sscore])))]
-## find the corresponding two-sided p-values
-signif[,p.values.2 := 2*(1 - pnorm(abs(signif[,Sscore])))]
-
-# sort the probe_ids by the absolute value of the Sscore:
-signif <- signif[order(abs(Sscore),decreasing = TRUE)]
-@
-
-<<>>= 
-# View the top of the most differentially expressed genes
-# from the GCSs.single output:
-
-# removing 'gene_name' and 'nProbes' columns for PDF printing:
-head(signif[,-c("gene_name","nProbes")])
-@ 
+% 
+% <<results=hide>>=
+% # run GCSscore() function with batch input:
+% GCSs.batch <- GCSscore(celTable = celtab, celTab.names = TRUE)
+% @
+% 
+% The \Robject{ExpressionSet} returned from the \Rfunction{GCSscore} package can easily be converted back to a \Robject{data.table} structure.  This matches the structure of the .CSV file that is created if the fileout option is set to TRUE.  The conversion of the \Robject{ExpressionSet} object to \Robject{data.table} is as follows:
+% 
+% <<>>=
+% # view class of output:
+% class(GCSs.batch)[1]
+% 
+% # converting GCS-score output from'ExpressionSet' to 'data.table':
+% GCSs.batch.dt <-
+%   data.table::as.data.table(cbind(GCSs.batch@featureData@data,
+%                                   GCSs.batch@assayData[["exprs"]]))
+% 
+% # preview the beginning and output of the batch output:
+% # *remove 'gene_name' and 'nProbes' columns for printing to PDF:
+% # head(GCSs.batch.dt[,-c("gene_name","nProbes")])
+% head(GCSs.batch.dt)
+% @
+% 
+% \section{Using GCS-Scores in gene expression analysis}
+% Under conditions of no differential expression, the GCS-Score output follows a standard normal (Gaussian) distribution with a mean of 0 and standard deviation of 1. This makes it straightforward to calculate p-values corresponding to rejection of the null hypothesis and acceptance of the alternative hypothesis of differential gene expression. Cutoff values for the GCS-scores can be set to achieve the desired level of significance. As an example, an absolute GCS-score value of 3 (signifying 3 standard deviations from the mean, a typical cutoff value) would correspond to a p-value of 0.003. Under this scenario, the significant genes can be found as:
+% 
+% <<>>= 
+% ## find scores greater than 3 SD:
+% signif <- GCSs.single.dt[abs(Sscore) >= 3]
+% 
+% # View the resulting table:
+% # removing 'gene_name' and 'nProbes' columns for PDF printing:
+% # head(signif[,-c("gene_name","nProbes")])
+% head(signif)
+% @ 
+% 
+% Similarly, the p-values can be calculated as:
+% 
+% <<results=hide>>=
+% # Calculate p-valus significant
+% ## find the corresponding one-sided p-values:
+% signif[,p.values.1 := (1 - pnorm(abs(signif[,Sscore])))]
+% ## find the corresponding two-sided p-values
+% signif[,p.values.2 := 2*(1 - pnorm(abs(signif[,Sscore])))]
+% 
+% # sort the probe_ids by the absolute value of the Sscore:
+% signif <- signif[order(abs(Sscore),decreasing = TRUE)]
+% @
+% 
+% <<>>= 
+% # View the top of the most differentially expressed genes
+% # from the GCSs.single output:
+% 
+% # removing 'gene_name' and 'nProbes' columns for PDF printing:
+% head(signif)
+% @ 
 
 While the GCS-score algorithm does account for the correlations among probes within a two-chip comparison, it does not adjust p-values for multiple comparisons when comparing more than one pair of chips.  The calculations for the SF and SDT are performed as originally described in the Affymetrix Statistical Algorithms Description Document \citep{affy:tech:2002} and implemented in Affymetrix software (using SDT = 4 * RawQ * SF). The calculations for each of the *.CEL files are independent.
 
