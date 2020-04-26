@@ -666,7 +666,7 @@ if (is.character(method)) {
   if (fileout) {
     #ID tag: a custom formatted timestamp applied to all written files
     ID <- format(Sys.time(), "%Y%m%d_%H%M%S")
-    fileName <- paste(chip, "_", methodTag, "_", "Sscore2_", ID, ".csv", sep = "")
+    fileName <- paste(chip, "_", methodTag, "_", "GCSs_", ID, ".csv", sep = "")
     message("*writing the GCS-score output to .CSV file in the working directory")
     fwrite(info, fileName)
   }
