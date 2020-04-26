@@ -9,4 +9,5 @@ utils::globalVariables(c("GC.count","MM_fid","fid","fsetid","man_fsetid",
                          "probesetid","transcriptclusterid","type",
                          "transcript_cluster_id", "probeDiff","xZone","X",
                          "yZone","Y","Intensities","STDVS",
-                         "nPixels","rawS","."))
+                         "nPixels","rawS",".","name","chr","symbol","ref_id",
+                         "nProbes","i.nProbes","category","probesettype"))
