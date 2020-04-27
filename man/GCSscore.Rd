@@ -28,9 +28,6 @@ The input accepts individual CEL files or reads in a CSV file for batch runs.  T
 \examples{
 if (length(list.files(path = ".", pattern = "*.CEL")) != 0){
 
-#load GCSscore package:
-library(GCSscore)
-
 ######################## Single run example ###########################
 
 # get the path to example CEL files provided with package:
