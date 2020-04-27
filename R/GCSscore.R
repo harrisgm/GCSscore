@@ -12,48 +12,8 @@ GCSscore <- function(celFile1 = NULL, celFile2 = NULL, celTable = NULL,
   `%!in%` <- Negate(`%in%`)
   `%!like%` <- Negate(`%like%`)
   
-  # # START OF TESTING VARIABLES
-  # chip <- "RTA-1_0"
-  # chip <- "MTA-1_0"
-  # chip <- "Clariom_S_Mouse"
-  # chip <- "Mouse430_2"
-  # clean.chip <- tolower(gsub("-|_", "",chip))
-  # clean.chip <- tolower(gsub("v1", "",clean.chip))
-  # probepkg <- paste(clean.chip,".probeFile",sep="")
-  # pdpkg <- paste("pd.",tolower(gsub("-|_", ".",chip)),sep = "")
-  # chip.pd <- pdpkg
-  # # END OF TESTING VARIABLES
-
-# BioConductor Version checks ---------------------------------------------
-
-  # Need to make sure Bioconductor is at least "3.10"
-  # So, bioconductor has to be installed to download it from the repository,
-  # But, the package will be on github as well.
-  if (!requireNamespace("BiocManager", quietly = TRUE)){
-    install.packages("BiocManager")
-  } else if (BiocManager::version() < bioC.latest){
-    # This command will update all Bioc packages to version 3.10
-    message(paste("Please ugrade to the latest version of bioconductor: ",bioC.latest,sep=""))
-    # NOTE: you should only update the packages that are necessary for the GCSscore to run:
-    # I had 83 packages to update: most of them do not matter, and some require compilation!
-    BiocManager::install(version = bioC.latest)
-  } else {message("\n  **latest version of bioconductor is already installed**")}
-  
-  # NOW, the installation works like a charm!!
-  # BiocManager::install("GCSscore", update = FALSE)
-  
 
 # CEL file support and logic checks ---------------------------------------
-
-  # Basic testing that all entered parameters are set to usable values:
-  # if (!(typeFilter == 0 | typeFilter == 1))stop("typeFilter must be (0) or (1). (1) is the recommended setting")
-  # if (!(method == 1 | method == 2))stop("method must be (1) or (2)")
-  # # check that either celFile1/2 or celTable is selected:
-  # if (is.null(celTable)) stopifnot(!is.null(celFile1), !is.null(celFile2))
-  # else if (is.null(celFile1) & is.null(celFile2)) stopifnot(!is.null(celTable))
-  # else stop("input either: 2 .CEL files (single-run) or 'celTable' (batch-run)")
-  
-  # NEW
   # Basic testing that all entered parameters are set to usable values:
   if (!(typeFilter == 0 | typeFilter == 1))stop("typeFilter must be (0) or (1). (0) is the recommended setting")
   if (!(method == 1 | method == 2))stop("method must be (1) or (2)")
@@ -238,30 +198,14 @@ if (!requireNamespace(probepkg, quietly = TRUE)){
     #Parse bgp probe list (same for all XTA probeFiles):  
     bgp <- probeFile[probesetid %like% "AFFX-BkGr-GC"]
     
-    # REMOVED THIS >4 probes FILTER:------------------
-    # # 03.08.20: Filter the probeFile for "probesetids" with >=4 probes.
-    # info <- probeFile[,.(nProbes = .N), keyby = "probesetid"]
-    # setkey(info,nProbes)
-    # info <- info[nProbes >= 4]
-    # probeFile <- probeFile[probesetid %in% info$probesetid]
-    # # END OF 03.08.20 edits
-    # REMOVED THIS >4 probes FILTER:------------------
-    
     if (method == 1){
       message(" ** performing transcriptclusterid-level (gene-centric) level analysis ** \n")
       methodTag <- "gene_level"
       method <- "transcriptclusterid"
-      # EDIT 03.08.20:
-      # WE NEED TO GO AHEAD AND REMOVE THE JUCS FROM THE INFO CALCULATION FOR TC-ID METHOD:
       info <- probeFile[,.(nProbes = .N), keyby = method]
-      # setkey(info,nProbes)
       infoKey <- key(info)
-      # Now, create a TCid-only probeFile to get the 'info' for later without the JUCs:
       probeFile.TCid <- probeFile[probesetid %!like% "JUC"]
-      # Get the 'info' for just the TCid-only probes (no JUC probes)
       info <- probeFile.TCid[,.(nProbes = .N), keyby = method]
-      # setkey(info,nProbes)
-      # END OF EDITS ON 03.08.20:
       
       # Load the correct annotation package for method:
       netaffx.annot <- eval(parse(text = paste(clean.chip,".TC.netaffx.annot::",clean.chip,".TC.netaffx.annot",sep="")))
@@ -321,8 +265,6 @@ if (!requireNamespace(probepkg, quietly = TRUE)){
   }
   
 # SETUP / PACAKGE CREATION FOR ClariomS-ARRAYS -------------------------
-    # See script: "package_setup_ClariomS.R"
-# GCSscore package setup for clariomS arrays (03.08.20):
 
 if (chip %in% chipClarS){
   pF.type <- "clariomS"
@@ -336,9 +278,6 @@ if (chip %in% chipClarS){
     BiocManager::install(packageName,ask = FALSE, update = FALSE)
   }  else{message(paste("Annotation package (",packageName,") already installed for chip-type: ", chip,sep=""))}
   
-  # While performing checks, get species information for packageName:
-  # species.pd <- eval(parse(text= paste("as.data.table(",packageName,"::",annotName,"ORGANISM)",sep = "")))
-  # THERE IS NO NEED TO LOAD THE WHOLE ANNOTATION PACKAGE HERE
   species.pd <- eval(parse(text= paste(packageName,"::",annotName,"ORGANISM",sep = "")))
   # replace ' ' with '_' to match makeProbePackage():
   species.pd <- gsub(" ", "_",species.pd)
@@ -373,8 +312,6 @@ if (chip %in% chipClarS){
     
   } else {message(paste("The latest verison (", annot.vers,") of the transcript-level netaffx-based annotation package already installed for chip-type: ", chip,sep=""))
   }
-  # QUICK VIEW OF ANNOT FILE:
-  # test <- clariomsmouse.TC.netaffx.annot::clariomsmouse.TC.netaffx.annot
   
   trim <- 0.04
   message(" *NOTE: 'method' is automatically set to (1) (transcript_cluster_id-level) for all ClariomS arrays")
@@ -388,12 +325,6 @@ if (chip %in% chipClarS){
   bgp <- probeFile[transcriptclusterid %like% "AFFX-BkGr-GC"]
   info <- probeFile[,.(nProbes = .N), keyby = method]
   infoKey <- key(info)
-  
-  # Remove TCids with less than 4 probes:
-  # setkey(info,nProbes)
-  # info <- info[nProbes >= 4]
-  # probeFile <- probeFile[transcriptclusterid %in% info$transcriptclusterid]
-  # setkey(info,"transcriptclusterid")
   
   # Load the correct annotation package for method:
   netaffx.annot <- eval(parse(text = paste(clean.chip,".TC.netaffx.annot::",clean.chip,".TC.netaffx.annot",sep="")))
@@ -423,11 +354,8 @@ if (chip %in% chipClarS){
   }
   infoKey <- key(info)
 }
-#  INSERT SECTION FOR 3'IVT ARRAYS:
 
 #  INSERT SECTION FOR 3' IVT ARRAYS---------------
-# See script: "package_setup_3primeIVT.R"
-# GCSscore package setup for 3' IVT arrays (03.08.20):  
 
 if (chip %in% chip3IVT){
   trim <- 0.02
@@ -486,17 +414,10 @@ if (chip %in% chip3IVT){
   annot <- annot.symbol[annot.genename]
   message(paste("loading SYMBOL and GENENAME annotations from BioConductor package: ", packageName,sep = ""))
   
-    # Filter down top probeFile to probesets that are annotated in the .db package:
-    # probeFile <- probeFile[probesetid %in% annot$probe_id]
-    # # Filter down bgp [equivalent to probeFile for MM probes] to probesets that are annotated in the .db package:
-    # bgp <- bgp[probesetid %in% annot$probe_id]
-  
   # For all 3prime IVT arrays, infokey is automatically set to: probesetID (man_fsetid)
   info <- probeFile[,.N, keyby = .(probesetid)]
   infoKey <- key(info)
   
-  # Add annotations to 'info' before running GCS-score algorithm:
-  # Have it such that The full list of TCids in the GCSscore is output, and the ones with genenames/symbols are annotated and the others are '---' or NA
   setkey(annot,probe_id)
   info <- annot[info]
   # Rename first column from 'probe_id' back to the infoKey' object:
@@ -514,7 +435,7 @@ if (chip %in% chip3IVT){
   # Disable rm.outmask for all non 3'-IVT arrays:
   if (chip %!in% chip3IVT){
     rm.outmask <- FALSE
-    message("removal of outliers and masked probes is disabling in non 3'-IVT chip types")
+    message("cannot disable removal of outliers and masked probes for non 3'-IVT chip types")
   }
 
 # mark the start of the GCS-score calculations:
@@ -539,10 +460,6 @@ if (is.character(method)) {
         names(probes.rm) <- "probes.rm"
         # Remove the duplicated values to create clean 'probes.rm' object:
         probes.rm <- probes.rm[!duplicated(probes.rm)]
-        # remove outlier and masked probes from the probeFile (call it probeFile.temp, so it can be overwritten inside the loop!)
-        # OKAY, for the mouse 430_2, leave the 'MM_fid' in the probeFile and assign all of the "pmmm" method math to be within the probeFile!
-        # I can keep the filtered 'bgp' list for all of the other array types (and the GC_BKG method for the 4302)
-        # if ("MM_fid" %in% colnames(probeFile)){}
         if (method == "pmmm"){
           # remove all probe fids that are either MM or PM probes from 3' IVT arrays:
           probeFile.temp <- probeFile[!(fid %in% probes.rm$probes.rm | MM_fid %in% probes.rm$probes.rm)]
@@ -562,7 +479,6 @@ if (is.character(method)) {
         probeFile.temp <- probeFile
         bgp.temp <- bgp
       }
-      # Score <- computeSscore(cel1, cel2, probeFile, bgp, method, infoKey, SF1 = SF1, SF2 = SF2, verbose = verbose, trim = trim)
       Score <- computeSscore(cel1, cel2, probeFile = probeFile.temp, bgp = bgp.temp, method, infoKey, SF1 = SF1, SF2 = SF2, verbose = verbose, trim = trim, clean.chip = clean.chip)
       info <- info[Score, on = infoKey]
       if (celTab.names){
@@ -600,10 +516,6 @@ if (is.character(method)) {
       names(probes.rm) <- "probes.rm"
       # Remove the duplicated values to create clean 'probes.rm' object:
       probes.rm <- probes.rm[!duplicated(probes.rm)]
-      # remove outlier and masked probes from the probeFile (call it probeFile.temp, so it can be overwritten inside the loop!)
-      # OKAY, for the mouse 430_2, leave the 'MM_fid' in the probeFile and assign all of the "pmmm" method math to be within the probeFile!
-      # I can keep the filtered 'bgp' list for all of the other array types (and the GC_BKG method for the 4302)
-      # if ("MM_fid" %in% colnames(probeFile)){}
       if (method == "pmmm"){
         # remove all probe fids that are either MM or PM probes from 3' IVT arrays:
         probeFile.temp <- probeFile[!(fid %in% probes.rm$probes.rm | MM_fid %in% probes.rm$probes.rm)]
@@ -648,10 +560,6 @@ if (is.character(method)) {
   info.annot[info.annot==""] <- NA
   # ADDITIONAL: MTA 1.0 (TCID-LEVEL) HAS MANY SYMBOLS == "---" (FOR ~33,000 TCIDS)
   info.annot[info.annot=="---"] <- NA
-  # ADD IN CODE TO OUTPUT GCS-score to Biobase data structure: ExpressionSet
-  # Create matrix with all the GCS-score values
-  # NOTE: first 4 columns contain 'featureSet' data, the remaining columns contain the differential expression values
-  # GCSs.exprs <- as.matrix(info[,5:ncol(info)], header=TRUE,as.is=TRUE)
   GCSs.exprs <- as.matrix(info[,(cIdx+1):ncol(info)], header=TRUE,as.is=TRUE)
   # GCSs.fsetData <- new("AnnotatedDataFrame", data=info[,1:4])
   GCSs.fsetData <- new("AnnotatedDataFrame", data=as.data.frame(info.annot))
