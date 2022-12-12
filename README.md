@@ -43,10 +43,10 @@ Contributing
 Contact
 -------
 
-Guy Harris, M.S.
-<harrisgm@vcu.edu>
-
 Michael F. Miles, M.D., Ph.D.
 <Michael.Miles@vcuhealth.org>
+
+Guy Harris, Ph.D.
+<gharr1717@gmail.com>
 
 [1]: https://github.com/harrisgm/GCSscore
