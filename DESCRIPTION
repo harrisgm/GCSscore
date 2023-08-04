@@ -10,7 +10,7 @@ License: GPL (>=3)
 Encoding: UTF-8
 Depends: R (>= 3.6)  
 Imports: BiocManager, Biobase, utils, methods, RSQLite, devtools, dplR, stringr, graphics, stats, affxparser, data.table
-Suggests: siggenes, GEOquery, R.utils
+Suggests: siggenes, GEOquery, R.utils, AnnotationForge
 biocViews: DifferentialExpression, Microarray, OneChannel,
         ProprietaryPlatforms, DataImport
 LazyData: FALSE
